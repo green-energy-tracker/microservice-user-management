@@ -46,7 +46,6 @@ pipeline {
 				container('kubectl') {
 					sh 'kubectl apply -f src/main/resources/k8s/deployment.yaml'
                     sh 'kubectl apply -f src/main/resources/k8s/service.yaml'
-                    sh 'kubectl apply -f src/main/resources/k8s/ingress.yaml'
                 }
             }
         }
