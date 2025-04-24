@@ -26,3 +26,5 @@ spring:
       producer:
         key-serializer: ${SPRING_KAFKA_PRODUCER_KEY_SERIALIZER}
         value-serializer: ${SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER}
+server:
+  port: ${SERVER_PORT}
