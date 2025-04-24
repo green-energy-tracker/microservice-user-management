@@ -26,10 +26,10 @@ spring:
     producer:
       key-serializer: ${SPRING_KAFKA_PRODUCER_KEY_SERIALIZER}
       value-serializer: ${SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER}
-  server:
-    port: ${SPRING_SERVER_PORT}
   management:
     endpoints:
       web:
         exposure:
           include: ${SPRING_MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE}
+server:
+  port: ${SPRING_SERVER_PORT}
