@@ -1,30 +1,35 @@
 spring:
   application:
     name: ${SPRING_APPLICATION_NAME}
-    datasource:
-      url: ${SPRING_DATASOURCE_URL}
-      username: ${SPRING_DATASOURCE_USERNAME}
-      password: ${SPRING_DATASOURCE_PASSWORD}
-      driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
-    jpa:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
       hibernate:
-        ddl-auto: update
-      show-sql: false
-      properties:
-        hibernate:
-          format_sql: true
-    kafka:
-      bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
-      properties:
-        schema:
-          registry:
-            cache-capacity: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_CACHE_CAPACITY}
-            url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
-      topic:
-        user-events: ${SPRING_KAFKA_TOPIC_USER_EVENTS}
-        user-events-dlq: ${SPRING_KAFKA_TOPIC_USER_EVENTS_DLQ}
-      producer:
-        key-serializer: ${SPRING_KAFKA_PRODUCER_KEY_SERIALIZER}
-        value-serializer: ${SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER}
-server:
-  port: ${SPRING_SERVER_PORT}
+        format_sql: true
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    properties:
+      schema:
+        registry:
+          cache-capacity: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_CACHE_CAPACITY}
+          url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
+    topic:
+      user-events: ${SPRING_KAFKA_TOPIC_USER_EVENTS}
+      user-events-dlq: ${SPRING_KAFKA_TOPIC_USER_EVENTS_DLQ}
+    producer:
+      key-serializer: ${SPRING_KAFKA_PRODUCER_KEY_SERIALIZER}
+      value-serializer: ${SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER}
+  server:
+    port: ${SPRING_SERVER_PORT}
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: ${SPRING_MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE}
