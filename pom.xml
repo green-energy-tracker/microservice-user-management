@@ -41,7 +41,7 @@
 		<jibMavenPluginVersion>3.4.1</jibMavenPluginVersion>
 		<imageJibVersion>openjdk:17-jdk-slim</imageJibVersion>
 		<registryUrl>registry.kube-system.svc.cluster.local:80</registryUrl>
-		<imageK8SName>${registryUrl}/${artifactId}:latest</imageK8SName>
+		<imageK8SName>${registryUrl}/${project.artifactId}:latest</imageK8SName>
 	</properties>
 	<dependencies>
 		<!-- Spring dependencies -->
@@ -171,10 +171,6 @@
 						</exclude>
 					</excludes>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
