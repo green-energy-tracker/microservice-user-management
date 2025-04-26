@@ -1,6 +1,5 @@
 package com.green.energy.tracker.user_management.config.kafkaStreams;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,15 +50,8 @@ public class KafkaStreamsExceptionHandler implements DeserializationExceptionHan
     }
 
     private void publishError(String type, String errorMessage, String recordInfo) {
-        try {
-            KafkaErrorEvent errorEvent = new KafkaErrorEvent(type, errorMessage, recordInfo);
-            String payload = objectMapper.writeValueAsString(errorEvent);
-            kafkaTemplate.send(userEventsTopicDLQ, payload);
-        } catch (JsonProcessingException e) {
-            log.error("Failed to serialize error payload: {}", e.getMessage(), e);
-        } catch (Exception ex) {
-            log.error("Failed to send error to DLQ: {}", ex.getMessage(), ex);
-        }
+        KafkaErrorEvent errorEvent = new KafkaErrorEvent(type, errorMessage, recordInfo);
+        kafkaTemplate.send(userEventsTopicDLQ,recordInfo);
     }
 
 
