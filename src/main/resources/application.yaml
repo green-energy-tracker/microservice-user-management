@@ -24,7 +24,10 @@ spring:
     topic:
       user-events: ${SPRING_KAFKA_TOPIC_USER_EVENTS}
       user-events-dlq: ${SPRING_KAFKA_TOPIC_USER_EVENTS_DLQ}
-      keycloak-admin-events: ${SPRING_KAFKA_KEYCLOAK_ADMIN_EVENTS}
+      auth-server-events: ${SPRING_KAFKA_TOPIC_AUTH_SERVER_EVENTS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
   management:
     endpoints:
       web:

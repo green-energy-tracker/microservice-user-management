@@ -1,8 +1,11 @@
 package com.green.energy.tracker.user_management.config;
 
+import com.green.energy.tracker.user_management.kafkaStream.KafkaStreamsExceptionHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.ssl.DefaultSslBundleRegistry;
 import org.springframework.context.annotation.Bean;
@@ -10,10 +13,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
+import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import java.util.Map;
+import java.util.Objects;
 
 @EnableKafkaStreams
 @Configuration
+@Slf4j
 public class KafkaStreamsConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -31,6 +37,18 @@ public class KafkaStreamsConfig {
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE_V2);
+        props.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, KafkaStreamsExceptionHandler.class);
+        props.put(StreamsConfig.DEFAULT_PRODUCTION_EXCEPTION_HANDLER_CLASS_CONFIG, KafkaStreamsExceptionHandler.class);
         return new KafkaStreamsConfiguration(props);
+    }
+
+    @Bean
+    public ApplicationRunner runner(StreamsBuilderFactoryBean factoryBean, KafkaStreamsExceptionHandler handler) {
+        return args -> {
+            var streams = factoryBean.getKafkaStreams();
+            if(Objects.nonNull(streams)) {
+                streams.setUncaughtExceptionHandler(handler::handleUncaught);
+            }
+        };
     }
 }

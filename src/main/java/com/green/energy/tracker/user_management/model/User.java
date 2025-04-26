@@ -1,9 +1,11 @@
 package com.green.energy.tracker.user_management.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 @Entity
 @Table(name = "users")
 public class User {

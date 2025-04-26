@@ -5,5 +5,7 @@ import java.util.Optional;
 
 public interface UserService {
     User save (User user);
+    User update (User user);
+    void delete (User user);
     Optional<User> findById (Long id);
 }
