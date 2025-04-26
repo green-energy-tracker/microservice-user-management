@@ -1,4 +1,4 @@
-package com.green.energy.tracker.user_management.kafkaStream;
+package com.green.energy.tracker.user_management.config.kafkaStreams;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

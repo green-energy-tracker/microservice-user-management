@@ -1,6 +1,5 @@
-package com.green.energy.tracker.user_management.config;
+package com.green.energy.tracker.user_management.config.kafkaStreams;
 
-import com.green.energy.tracker.user_management.kafkaStream.KafkaStreamsExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
