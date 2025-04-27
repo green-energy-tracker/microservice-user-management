@@ -42,12 +42,12 @@ public class UserKafkaStreams {
         streamsBuilder.stream(authServerEventsTopic, Consumed.with(Serdes.String(),Serdes.String()))
                 .peek((key,event)-> log.info("Consuming events from topic {} : {} ",authServerEventsTopic, event))
                 .mapValues((key, event) -> authServerEventService.eventToUser(event))
+                .peek((key,userEvent)-> log.info("Converted event to userEvent {}",userEvent))
                 .flatMapValues((key, mapEvent) ->
-                        mapEvent.entrySet().stream()
-                                .map(entry -> userService.handleUserEvent(entry.getKey(), entry.getValue()))
-                                .toList()
-                )
+                        mapEvent.entrySet().stream().map(entry -> userService.handleUserEvent(entry.getKey(), entry.getValue())).toList())
+                .peek((key,user)-> log.info("Converted userEvent to user {} and perform operation on db",user))
                 .map((key, user) -> new KeyValue<>(user.getUsername(), user))
+                .peek((key,user)-> log.info("Publishing user {} to topic {}",user,userEventsTopic))
                 .to(userEventsTopic, Produced.with(Serdes.String(), customSerdes.userSerde()));
 
         var topology = streamsBuilder.build();
