@@ -1,4 +1,4 @@
-package com.green.energy.tracker.user_management.config.kafkaStreams;
+package com.green.energy.tracker.user_management.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

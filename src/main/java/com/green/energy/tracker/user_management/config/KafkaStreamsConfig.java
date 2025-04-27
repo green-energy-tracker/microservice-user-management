@@ -1,4 +1,4 @@
-package com.green.energy.tracker.user_management.config.kafkaStreams;
+package com.green.energy.tracker.user_management.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;

@@ -1,6 +1,6 @@
-package com.green.energy.tracker.user_management.kafkaStream;
+package com.green.energy.tracker.user_management.stream;
 
-import com.green.energy.tracker.user_management.config.kafkaStreams.KafkaStreamsExceptionHandler;
+import com.green.energy.tracker.user_management.config.KafkaStreamsExceptionHandler;
 import com.green.energy.tracker.user_management.service.AuthServerEventService;
 import com.green.energy.tracker.user_management.service.UserService;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.green.energy.tracker.user_management.config.kafkaStreams;
+package com.green.energy.tracker.user_management.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,6 @@ public class KafkaStreamsExceptionHandler implements DeserializationExceptionHan
     @Value("${spring.kafka.topic.user-events-dlq}")
     private String userEventsTopicDLQ;
     private final KafkaTemplate<String, String> kafkaTemplate;
-    private final ObjectMapper objectMapper;
 
     @Override
     public DeserializationHandlerResponse handle(ProcessorContext processorContext, ConsumerRecord<byte[], byte[]> consumerRecord, Exception e) {
