@@ -3,6 +3,7 @@ package com.green.energy.tracker.user_management.stream;
 import com.green.energy.tracker.user_management.config.KafkaStreamsExceptionHandler;
 import com.green.energy.tracker.user_management.service.AuthServerEventService;
 import com.green.energy.tracker.user_management.service.UserService;
+import com.green.energy.tracker.user_management.util.CustomSerdes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
@@ -29,8 +30,14 @@ public class UserKafkaStreams {
     private String userEventsTopic;
 
     @Bean
-    public Topology build(KafkaStreamsConfiguration kafkaStreamsConfiguration, StreamsBuilder streamsBuilder, KafkaStreamsExceptionHandler handler,
-                          UserService userService, @Qualifier("keycloakEventServiceV1") AuthServerEventService authServerEventService) {
+    public Topology build(
+            KafkaStreamsConfiguration kafkaStreamsConfiguration,
+            StreamsBuilder streamsBuilder,
+            KafkaStreamsExceptionHandler handler,
+            CustomSerdes customSerdes,
+            UserService userService,
+            @Qualifier("keycloakEventServiceV1") AuthServerEventService authServerEventService
+    ) {
 
         streamsBuilder.stream(authServerEventsTopic, Consumed.with(Serdes.String(),Serdes.String()))
                 .peek((key,event)-> log.info("Consuming events from topic {} : {} ",authServerEventsTopic, event))
@@ -40,8 +47,8 @@ public class UserKafkaStreams {
                                 .map(entry -> userService.handleUserEvent(entry.getKey(), entry.getValue()))
                                 .toList()
                 )
-                .map((key, user) -> new KeyValue<>(user.getId(), user.toString()))
-                .to(userEventsTopic, Produced.with(Serdes.Long(), Serdes.String()));
+                .map((key, user) -> new KeyValue<>(user.getUsername(), user))
+                .to(userEventsTopic, Produced.with(Serdes.String(), customSerdes.userSerde()));
 
         var topology = streamsBuilder.build();
         var kafkaStreams = new KafkaStreams(topology, kafkaStreamsConfiguration.asProperties());
