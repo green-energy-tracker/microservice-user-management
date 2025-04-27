@@ -29,6 +29,6 @@ public class User {
     @Column(name = "realm_id", nullable = false)
     private String realmId;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false)
     private String username;
 }
