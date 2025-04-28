@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Service("user_service_v1.0")
+@Service("UserServiceV1")
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
