@@ -42,9 +42,26 @@ pipeline {
         }
 
         stage('Deploy on Minikube') {
-			steps {
-				container('kubectl') {
-					sh 'kubectl apply -f src/main/resources/k8s/deployment.yaml'
+            steps {
+                container('kubectl') {
+                    script {
+                        sh 'kubectl apply -f src/main/resources/k8s/deployment.yaml'
+
+                        def deploymentName = "user-management-pod"
+
+                        echo "Checking if deployment ${deploymentName} exists..."
+                        def exists = sh(
+                            script: "kubectl get deployment ${deploymentName} --ignore-not-found",
+                            returnStdout: true
+                        ).trim()
+
+                        if (exists) {
+                            echo "Deployment found. Forcing rollout restart..."
+                            sh "kubectl rollout restart deployment/${deploymentName}"
+                        } else {
+                            echo "Deployment not found yet. Skipping rollout restart."
+                        }
+                    }
                 }
             }
         }
