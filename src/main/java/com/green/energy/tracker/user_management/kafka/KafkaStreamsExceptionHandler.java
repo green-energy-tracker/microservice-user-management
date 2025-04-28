@@ -23,7 +23,7 @@ public class KafkaStreamsExceptionHandler {
 
     @Value("${spring.kafka.topic.user-events-dlq}")
     private String userEventsTopicDLQ;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, KafkaDlqRecord> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
     public <K, V> void sendToDlq(Throwable throwable,String topic, K key, V value) {
@@ -35,12 +35,7 @@ public class KafkaStreamsExceptionHandler {
                 .errorMessage(throwable.getMessage())
                 .timestamp(new Date().getTime())
                 .build();
-        try {
-            String dlqPayload = objectMapper.writeValueAsString(dlqRecord);
-            kafkaTemplate.send(userEventsTopicDLQ, dlqRecord.getKey(), dlqPayload);
-        } catch (Exception e) {
-            log.error("Failed to send record to DLQ", e);
-        }
+        kafkaTemplate.send(userEventsTopicDLQ, dlqRecord.getKey(), dlqRecord);
     }
 
     @Component

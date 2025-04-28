@@ -27,7 +27,7 @@ spring:
       auth-server-events: ${SPRING_KAFKA_TOPIC_AUTH_SERVER_EVENTS}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
   management:
     endpoints:
       web:
