@@ -16,6 +16,7 @@ import java.util.*;
 
 @Slf4j
 @Component
+@NoArgsConstructor
 public class KafkaStreamsExceptionHandler implements DeserializationExceptionHandler, ProductionExceptionHandler {
 
     @Value("${spring.kafka.topic.user-events-dlq}")
