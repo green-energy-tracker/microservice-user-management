@@ -1,6 +1,5 @@
 package com.green.energy.tracker.user_management.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
