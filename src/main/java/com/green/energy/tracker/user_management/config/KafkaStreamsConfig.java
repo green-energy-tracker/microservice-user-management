@@ -1,8 +1,11 @@
 package com.green.energy.tracker.user_management.config;
 
+import com.green.energy.tracker.user_management.kafka.KafkaStreamsExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.errors.DeserializationExceptionHandler;
+import org.apache.kafka.streams.errors.ProductionExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.boot.ssl.DefaultSslBundleRegistry;
@@ -33,6 +36,8 @@ public class KafkaStreamsConfig {
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE_V2);
+        props.put(StreamsConfig.DEFAULT_PRODUCTION_EXCEPTION_HANDLER_CLASS_CONFIG, KafkaStreamsExceptionHandler.CustomDeserializationHandler.class.getName());
+        props.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, KafkaStreamsExceptionHandler.CustomDeserializationHandler.class.getName());
         return new KafkaStreamsConfiguration(props);
     }
 }

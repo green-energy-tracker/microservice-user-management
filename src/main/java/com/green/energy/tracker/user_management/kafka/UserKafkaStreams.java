@@ -36,12 +36,9 @@ public class UserKafkaStreams {
             @Qualifier("UserServiceV1") UserService userService,
             @Qualifier("keycloakEventServiceV1") AuthServerEventService authServerEventService
     ) {
-
         streamsBuilder.stream(authServerEventsTopic, Consumed.with(Serdes.String(),Serdes.String()))
                 .peek((key,event)-> log.info("Consuming events from topic {} : {} ",authServerEventsTopic, event))
                 .mapValues((key, event) -> handleAuthServerEvent(kafkaStreamsExceptionHandler,authServerEventService,key,event))
-                .filter((key, userEvent) -> userEvent.isPresent())
-                .mapValues(Optional::get)
                 .peek((key,userEvent)-> log.info("Converting event to userEvent {}",userEvent))
                 .flatMapValues((key, userEvent) -> handleUserEvent(kafkaStreamsExceptionHandler,userService,key,userEvent))
                 .peek((key,user)-> log.info("Converting userEvent to user {} ",user))
@@ -51,22 +48,23 @@ public class UserKafkaStreams {
 
         var topology = streamsBuilder.build();
         var kafkaStreams = new KafkaStreams(topology, kafkaStreamsConfiguration.asProperties());
-        kafkaStreams.setUncaughtExceptionHandler(error->{
-            log.error("Uncaught Exception user event stream", error);
-            return StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.REPLACE_THREAD;
-        });
+        kafkaStreams.setUncaughtExceptionHandler(this::handleUncaughtException);
         kafkaStreams.start();
         return topology;
     }
 
-    private Optional<Map<UserEvent, User>> handleAuthServerEvent(KafkaStreamsExceptionHandler kafkaStreamsExceptionHandler,
-                                                                 AuthServerEventService authServerEventService,
-                                                                 String key, String event){
+    private StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse handleUncaughtException(Throwable throwable){
+        log.error("Uncaught Exception user event stream", throwable);
+        return StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.REPLACE_THREAD;
+    }
+
+    private Map<UserEvent, User> handleAuthServerEvent(KafkaStreamsExceptionHandler exceptionHandler,
+                                                       AuthServerEventService authServerEventService,String key, String event){
         try {
-            return Optional.ofNullable(authServerEventService.eventToUser(event));
+            return authServerEventService.eventToUser(event);
         } catch (JsonProcessingException e) {
-            kafkaStreamsExceptionHandler.sendToDlq(e,authServerEventsTopic,key,event);
-            return Optional.empty();
+            exceptionHandler.sendToDlq(e,authServerEventsTopic,key,event);
+            return null;
         }
     }
 
