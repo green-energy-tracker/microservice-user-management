@@ -1,6 +1,7 @@
 package com.green.energy.tracker.user_management.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -43,7 +44,8 @@ public class KafkaStreamsExceptionHandler {
     }
 
     @Component
-    public class CustomDeserializationHandler implements DeserializationExceptionHandler, ProductionExceptionHandler {
+    @NoArgsConstructor
+    public class CustomDeserializationProductionHandler implements DeserializationExceptionHandler, ProductionExceptionHandler {
 
         @Override
         public DeserializationHandlerResponse handle(ProcessorContext processorContext, ConsumerRecord<byte[], byte[]> consumerRecord, Exception exception) {
