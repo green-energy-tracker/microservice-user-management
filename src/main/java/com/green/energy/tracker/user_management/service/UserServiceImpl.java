@@ -37,9 +37,16 @@ public class UserServiceImpl implements UserService{
     @Override
     public User handleUserEvent(UserEvent userEvent, User user) {
         switch (userEvent){
-            case CREATE -> user = save(user);
-            case UPDATE -> user = update(user);
-            case DELETE -> delete(user);
+            case CREATE -> {
+                return save(user);
+            }
+            case UPDATE -> {
+                return update(user);
+            }
+            case DELETE -> {
+                delete(user);
+                return user;
+            }
         }
         return user;
     }

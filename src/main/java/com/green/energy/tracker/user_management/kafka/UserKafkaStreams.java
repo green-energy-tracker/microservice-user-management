@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.stereotype.Component;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -39,12 +38,9 @@ public class UserKafkaStreams {
     ) {
         streamsBuilder.stream(authServerEventsTopic, Consumed.with(Serdes.String(),Serdes.String()))
                 .peek((key,event)-> log.info("Consuming events from topic {} : {} ",authServerEventsTopic, event))
-                .mapValues((key, event) -> handleAuthServerEvent(kafkaStreamsExceptionHandler,authServerEventService,key,event))
+                .mapValues((key, event) -> handleEvent(kafkaStreamsExceptionHandler,authServerEventService,userService, key,event))
                 .filter((key,optEvent)-> optEvent.isPresent())
                 .mapValues(Optional::get)
-                .peek((key,userEvent)-> log.info("Converting event to userEvent {}",userEvent))
-                .flatMapValues((key, userEvent) -> handleUserEvent(kafkaStreamsExceptionHandler,userService,key,userEvent))
-                .peek((key,user)-> log.info("Converting userEvent to user {} ",user))
                 .map((key, user) -> new KeyValue<>(user.getUsername(), user))
                 .peek((key,user)-> log.info("Publishing user {} to topic {}",user,userEventsTopic))
                 .to(userEventsTopic, Produced.with(Serdes.String(), customSerdes.userSerde()));
@@ -56,33 +52,22 @@ public class UserKafkaStreams {
         return topology;
     }
 
+    private Optional<User> handleEvent(KafkaStreamsExceptionHandler exceptionHandler,
+                             AuthServerEventService authServerEventService, UserService userService, String key, String event){
+        try {
+            Map<UserEvent, User> userEvents = authServerEventService.eventToUser(event);
+            if (Objects.nonNull(userEvents) && !userEvents.isEmpty()) {
+                Map.Entry<UserEvent, User> entry = userEvents.entrySet().iterator().next();
+                return Optional.ofNullable(userService.handleUserEvent(entry.getKey(), entry.getValue()));
+            }
+        } catch (JsonProcessingException | PersistenceException e) {
+            exceptionHandler.sendToDlq(e,authServerEventsTopic,key,event);
+        }
+        return Optional.empty();
+    }
+
     private StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse handleUncaughtException(Throwable throwable){
         log.error("Uncaught Exception user event stream", throwable);
         return StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.REPLACE_THREAD;
-    }
-
-    private Optional<Map<UserEvent, User>> handleAuthServerEvent(KafkaStreamsExceptionHandler exceptionHandler,
-                                                       AuthServerEventService authServerEventService,String key, String event){
-        try {
-            return Optional.ofNullable(authServerEventService.eventToUser(event));
-        } catch (JsonProcessingException e) {
-            exceptionHandler.sendToDlq(e,authServerEventsTopic,key,event);
-            return Optional.empty();
-        }
-    }
-
-    private List<User> handleUserEvent(KafkaStreamsExceptionHandler kafkaStreamsExceptionHandler, UserService userService,
-                                       String key, Map<UserEvent,User> userEvent){
-        return userEvent.entrySet()
-                .stream()
-                .flatMap(entry -> {
-                    try {
-                        return Stream.of((userService.handleUserEvent(entry.getKey(), entry.getValue())));
-                    } catch (PersistenceException e) {
-                        kafkaStreamsExceptionHandler.sendToDlq(e, authServerEventsTopic, key, userEvent);
-                        return Stream.empty();
-                    }
-                })
-                .toList();
     }
 }
