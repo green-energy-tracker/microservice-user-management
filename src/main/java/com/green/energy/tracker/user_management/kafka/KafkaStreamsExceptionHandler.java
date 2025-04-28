@@ -1,12 +1,15 @@
 package com.green.energy.tracker.user_management.kafka;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.streams.errors.DeserializationExceptionHandler;
 import org.apache.kafka.streams.errors.ProductionExceptionHandler;
 import org.apache.kafka.streams.processor.ProcessorContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import java.util.*;
@@ -18,11 +21,8 @@ public class KafkaStreamsExceptionHandler implements DeserializationExceptionHan
     @Value("${spring.kafka.topic.user-events-dlq}")
     private String userEventsTopicDLQ;
 
-    private final KafkaTemplate<String, KafkaDlqRecord> kafkaTemplate;
-
-    public KafkaStreamsExceptionHandler(KafkaTemplate<String, KafkaDlqRecord> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-    }
+    @Autowired
+    private KafkaTemplate<String, KafkaDlqRecord> kafkaTemplate;
 
     @Override
     public DeserializationHandlerResponse handle(ProcessorContext processorContext, ConsumerRecord<byte[], byte[]> consumerRecord, Exception exception) {
@@ -33,7 +33,7 @@ public class KafkaStreamsExceptionHandler implements DeserializationExceptionHan
 
     @Override
     public void configure(Map<String, ?> configs) {
-        // Configurazioni se necessarie
+
     }
 
     @Override
