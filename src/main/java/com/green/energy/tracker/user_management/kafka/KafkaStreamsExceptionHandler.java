@@ -18,11 +18,12 @@ import java.util.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@NoArgsConstructor
 public class KafkaStreamsExceptionHandler {
 
     @Value("${spring.kafka.topic.user-events-dlq}")
     private String userEventsTopicDLQ;
-    private final KafkaTemplate<String, KafkaDlqRecord> kafkaTemplate;
+    private KafkaTemplate<String, KafkaDlqRecord> kafkaTemplate;
 
     public <K, V> void sendToDlq(Throwable throwable,String topic, K key, V value) {
         log.error("Sending record to DLQ due to exception", throwable);
@@ -37,7 +38,6 @@ public class KafkaStreamsExceptionHandler {
     }
 
     @Component
-    @NoArgsConstructor
     public class CustomDeserializationProductionHandler implements DeserializationExceptionHandler, ProductionExceptionHandler {
 
         @Override
