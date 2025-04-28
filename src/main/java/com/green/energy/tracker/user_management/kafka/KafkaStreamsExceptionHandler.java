@@ -24,7 +24,6 @@ public class KafkaStreamsExceptionHandler {
     @Value("${spring.kafka.topic.user-events-dlq}")
     private String userEventsTopicDLQ;
     private final KafkaTemplate<String, KafkaDlqRecord> kafkaTemplate;
-    private final ObjectMapper objectMapper;
 
     public <K, V> void sendToDlq(Throwable throwable,String topic, K key, V value) {
         log.error("Sending record to DLQ due to exception", throwable);
