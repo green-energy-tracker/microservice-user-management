@@ -34,7 +34,7 @@ public class KeycloakEventServiceImpl implements AuthServerEventService {
     }
 
     private User getUserFromRepresentation(JsonNode root) throws JsonProcessingException {
-        String representation = root.path(REPRESENTATION).asText();
+        String representation = root.path(REPRESENTATION).asText().replaceAll("^\"|\"$", "");
         JsonNode repNode = objectMapper.readTree(representation);
         return User.builder()
                 .email(repNode.path(EMAIL).asText())
