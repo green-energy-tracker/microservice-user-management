@@ -21,7 +21,7 @@ pipeline {
 
         stage('Build') {
 			steps {
-			    withMaven(mavenSettingsConfig: 'MyGlobalSettings') {
+			    withMaven(mavenSettingsConfig: 'nexus-settings') {
 				    sh 'mvn clean package'
 				}
             }
