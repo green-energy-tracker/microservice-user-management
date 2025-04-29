@@ -10,6 +10,7 @@ pipeline {
         IMAGE_NAME = 'user-management'
         IMAGE_TAG = 'latest'
         REGISTRY = 'nexus.nexus.svc.cluster.local:5000'
+        GROUP_ID = 'com.green.energy.tracker'
     }
 
     stages {
@@ -19,11 +20,10 @@ pipeline {
             }
         }
 
-        stage('Build & Docker') {
+        stage('Build package') {
             steps {
                 withMaven(mavenSettingsConfig: 'nexus-settings') {
                    sh 'mvn clean package'
-                   sh 'mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.1:build -Dimage=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}'
                 }
             }
         }
@@ -32,6 +32,14 @@ pipeline {
 			steps {
 				withSonarQubeEnv('SonarQube') { // Nome del server SonarQube configurato in Jenkins
                     sh "${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${IMAGE_NAME} -Dsonar.sources=src -Dsonar.java.binaries=target/classes"
+                }
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                withMaven(mavenSettingsConfig: 'nexus-settings') {
+                    sh 'mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.1:build -Dimage=${REGISTRY}/${GROUP_ID}/${IMAGE_NAME}:${IMAGE_TAG}'
                 }
             }
         }
