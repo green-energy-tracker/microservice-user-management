@@ -39,7 +39,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 withMaven(mavenSettingsConfig: 'nexus-settings') {
-                    sh 'mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.1:build -Dimage=${REGISTRY}/${GROUP_ID}/${IMAGE_NAME}:${IMAGE_TAG}'
+                    sh 'mvn com.google.cloud.tools:jib-maven-plugin:build'
                 }
             }
         }
