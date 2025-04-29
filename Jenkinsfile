@@ -39,7 +39,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 withMaven(mavenSettingsConfig: 'nexus-settings') {
-                    sh 'mvn com.google.cloud.tools:jib-maven-plugin:build'
+                    sh 'mvn jib:build -DsendCredentialsOverHttp=true'
                 }
             }
         }
