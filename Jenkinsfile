@@ -19,11 +19,15 @@ pipeline {
             }
         }
 
-        stage('Build') {
-			steps {
-			    withMaven(mavenSettingsConfig: 'nexus-settings') {
-				    sh 'mvn clean package'
-				}
+        stage('Build & Docker') {
+            steps {
+                withMaven(mavenSettingsConfig: 'nexus-settings') {
+                   sh 'mvn clean package'
+                   sh """
+                     mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.1:build \
+                       -Dimage=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+                   """
+                }
             }
         }
 
@@ -32,14 +36,6 @@ pipeline {
 				withSonarQubeEnv('SonarQube') { // Nome del server SonarQube configurato in Jenkins
                     sh "${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${IMAGE_NAME} -Dsonar.sources=src -Dsonar.java.binaries=target/classes"
                 }
-            }
-        }
-        stage('Docker Image Build with Jib') {
-			steps {
-				sh """
-                    mvn compile com.google.cloud.tools:jib-maven-plugin:3.4.1:build \
-                      -Dimage=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
-                    """
             }
         }
 
