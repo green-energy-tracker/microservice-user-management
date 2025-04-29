@@ -19,7 +19,7 @@
 		<repository>
 			<id>nexus-public</id>
 			<name>Nexus Public Group</name>
-			<url>http://nexus.local/repository/maven-public/</url>
+			<url>http://nexus.nexus.svc.cluster.local:8081/repository/maven-public/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -32,7 +32,7 @@
 		<pluginRepository>
 			<id>nexus-public</id>
 			<name>Nexus Public Group</name>
-			<url>http://nexus.local/repository/maven-public/</url>
+			<url>http://nexus.nexus.svc.cluster.local:8081/repository/maven-public/</url>
 			<releases><enabled>true</enabled></releases>
 			<snapshots><enabled>true</enabled></snapshots>
 		</pluginRepository>
