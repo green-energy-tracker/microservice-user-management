@@ -9,7 +9,6 @@ pipeline {
 		SONARQUBE_SCANNER_HOME = tool 'SonarQubeScanner'
         IMAGE_NAME = 'user-management'
         IMAGE_TAG = 'latest'
-        REGISTRY = 'nexus.nexus.svc.cluster.local:5000'
         GROUP_ID = 'com.green.energy.tracker'
         NEXUS_CREDENTIALS_ID = 'nexus-docker-creds'
     }

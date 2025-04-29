@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-management-pod
+  namespace: green-energy-tracker
 spec:
   replicas: 1
   selector:
@@ -12,9 +13,11 @@ spec:
       labels:
         app: user-management
     spec:
+      imagePullSecrets:
+        - name: nexus-registry-secret
       containers:
         - name: user-management
-          image: nexus.nexus.svc.cluster.local:5000/com.green.energy.tracker/user-management:latest
+          image: nexus-repository.local/com.green.energy.tracker/user-management:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
