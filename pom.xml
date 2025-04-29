@@ -50,7 +50,7 @@
 		<jibMavenPluginVersion>3.4.1</jibMavenPluginVersion>
 		<imageJibVersion>openjdk:17-jdk-slim</imageJibVersion>
 		<registryUrl>nexus.nexus.svc.cluster.local:5000</registryUrl>
-		<imageK8SName>${registryUrl}/${groupId}/${project.artifactId}:latest</imageK8SName>
+		<imageK8SName>${registryUrl}/${project.groupId}/${project.artifactId}:latest</imageK8SName>
 	</properties>
 	<dependencies>
 		<!-- Spring dependencies -->
