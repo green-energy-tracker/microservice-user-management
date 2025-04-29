@@ -49,7 +49,7 @@
 		<avroPluginVersion>1.10.2</avroPluginVersion>
 		<jibMavenPluginVersion>3.4.1</jibMavenPluginVersion>
 		<imageJibVersion>openjdk:17-jdk-slim</imageJibVersion>
-		<registryUrl>nexus.nexus.svc.cluster.local:5000</registryUrl>
+		<registryUrl>nexus.nexus.svc.cluster.local:64395</registryUrl>
 		<imageK8SName>${registryUrl}/${project.groupId}/${project.artifactId}:latest</imageK8SName>
 	</properties>
 	<dependencies>
