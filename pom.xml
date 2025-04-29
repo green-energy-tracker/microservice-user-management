@@ -191,6 +191,10 @@
 					</from>
 					<to>
 						<image>${imageK8SName}</image>
+						<auth>
+							<username>${env.NEXUS_USERNAME}</username>
+							<password>${env.NEXUS_PASSWORD}</password>
+						</auth>
 					</to>
 					<allowInsecureRegistries>true</allowInsecureRegistries>
 				</configuration>
