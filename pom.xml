@@ -16,18 +16,27 @@
 	<url/>
 
 	<repositories>
-		<!-- Maven Central -->
 		<repository>
-			<id>central</id>
-			<url>https://repo.maven.apache.org/maven2</url>
-		</repository>
-		<!-- Confluent Repository -->
-		<repository>
-			<id>confluent</id>
-			<url>https://packages.confluent.io/maven</url>
+			<id>nexus-public</id>
+			<name>Nexus Public Group</name>
+			<url>http://nexus.local/repository/maven-public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
-
+	<pluginRepositories>
+		<pluginRepository>
+			<id>nexus-public</id>
+			<name>Nexus Public Group</name>
+			<url>http://nexus.local/repository/maven-public/</url>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2024.0.1</spring-cloud.version>
