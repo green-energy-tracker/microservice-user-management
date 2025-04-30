@@ -1,4 +1,4 @@
-@Library('templatePipelineJenkins')
+@Library('templatePipelineJenkins') _
 
 templatePipelineJenkins(
     imageName: 'user-management-pod',
