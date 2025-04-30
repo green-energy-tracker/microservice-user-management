@@ -46,9 +46,7 @@ spec:
     - name: your-image-pull-secret
 """
       yamlMergeStrategy 'override'
-      podRetention {
-        never()
-      }
+      podRetention never()
     }
   }
 
