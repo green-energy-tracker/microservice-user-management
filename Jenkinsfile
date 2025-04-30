@@ -24,6 +24,16 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDENTIALS_ID}", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                     withMaven(mavenSettingsConfig: 'nexus-settings') {
+                       sh 'mvn clean install -U'
+                    }
+                }
+            }
+        }
+
+        stage('Build package') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDENTIALS_ID}", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    withMaven(mavenSettingsConfig: 'nexus-settings') {
                        sh 'mvn clean package'
                     }
                 }
