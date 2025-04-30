@@ -14,29 +14,6 @@
 	<name>user-management</name>
 	<description>User management microservice for Green Energy Tracker</description>
 	<url/>
-
-	<repositories>
-		<repository>
-			<id>nexus-public</id>
-			<name>Nexus Public Group</name>
-			<url>http://nexus-repository.nexus.svc.cluster.local:8081/repository/maven-public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>nexus-public</id>
-			<name>Nexus Public Group</name>
-			<url>http://nexus-repository.nexus.svc.cluster.local:8081/repository/maven-public/</url>
-			<releases><enabled>true</enabled></releases>
-			<snapshots><enabled>true</enabled></snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2024.0.1</spring-cloud.version>
@@ -49,9 +26,32 @@
 		<avroPluginVersion>1.10.2</avroPluginVersion>
 		<jibMavenPluginVersion>3.4.1</jibMavenPluginVersion>
 		<imageJibVersion>openjdk:17-jdk-slim</imageJibVersion>
+		<repositoryUrl>nexus-repository.nexus.svc.cluster.local:8081</repositoryUrl>
 		<registryUrl>nexus-registry.nexus.svc.cluster.local:64395</registryUrl>
 		<imageK8SName>${registryUrl}/${project.groupId}/${project.artifactId}:latest</imageK8SName>
 	</properties>
+	<repositories>
+		<repository>
+			<id>nexus-public</id>
+			<name>Nexus Public Group</name>
+			<url>http://${repositoryUrl}/repository/maven-public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>nexus-public</id>
+			<name>Nexus Public Group</name>
+			<url>http://${repositoryUrl}/repository/maven-public/</url>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 	<dependencies>
 		<!-- Spring dependencies -->
 		<dependency>
@@ -192,7 +192,9 @@
 					<to>
 						<image>${imageK8SName}</image>
 						<auth>
+							<!--suppress UnresolvedMavenProperty -->
 							<username>${env.NEXUS_USERNAME}</username>
+							<!--suppress UnresolvedMavenProperty -->
 							<password>${env.NEXUS_PASSWORD}</password>
 						</auth>
 					</to>
