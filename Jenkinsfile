@@ -20,7 +20,7 @@ pipeline {
             }
         }
 
-        stage('Build package') {
+        stage('install') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDENTIALS_ID}", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                     withMaven(mavenSettingsConfig: 'nexus-settings') {
