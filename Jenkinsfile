@@ -10,6 +10,7 @@ pipeline {
         IMAGE_NAME = 'user-management'
         IMAGE_TAG = 'latest'
         GROUP_ID = 'com.green.energy.tracker'
+        NEXUS_CREDENTIALS_ID = 'nexus-docker-creds'
     }
 
     stages {
@@ -21,8 +22,10 @@ pipeline {
 
         stage('Build package') {
             steps {
-                withMaven(mavenSettingsConfig: 'nexus-settings') {
-                   sh 'mvn clean package'
+                withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDENTIALS_ID}", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    withMaven(mavenSettingsConfig: 'nexus-settings') {
+                       sh 'mvn clean package'
+                    }
                 }
             }
         }
@@ -37,8 +40,9 @@ pipeline {
 
         stage('Build Image') {
             steps {
-                withMaven(mavenSettingsConfig: 'nexus-settings') {
-                    sh 'mvn jib:build -DsendCredentialsOverHttp=true'
+                withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDENTIALS_ID}", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    withMaven(mavenSettingsConfig: 'nexus-settings') {
+                        sh 'mvn jib:build -DsendCredentialsOverHttp=true'
                 }
             }
         }

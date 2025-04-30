@@ -16,33 +16,13 @@
 	<url/>
 	<properties>
 		<java.version>17</java.version>
-		<spring-cloud.version>2024.0.1</spring-cloud.version>
-		<openApiVersion>2.7.0</openApiVersion>
-		<swaggerVersion>2.2.13</swaggerVersion>
-		<avroSchemaVersion>7.3.0</avroSchemaVersion>
-		<avroVersion>1.12.0</avroVersion>
-		<schemaRegistryPlugVers>7.8.0</schemaRegistryPlugVers>
-		<modelMapperVersion>3.0.0</modelMapperVersion>
-		<avroPluginVersion>1.10.2</avroPluginVersion>
-		<jibMavenPluginVersion>3.4.1</jibMavenPluginVersion>
-		<imageJibVersion>openjdk:17-jdk-slim</imageJibVersion>
-		<nexusUsername>${env.NEXUS_USERNAME}</nexusUsername>
-		<nexusPassword>${env.NEXUS_PASSWORD}</nexusPassword>
-		<repositoryUrl>${env.SPRING_NEXUS_REPOSITORY_URL}</repositoryUrl>
-		<registryUrl>${env.SPRING_NEXUS_REGISTRY_URL}</registryUrl>
-		<imageK8SName>${registryUrl}/${project.groupId}/${project.artifactId}:latest</imageK8SName>
 	</properties>
 	<repositories>
 		<repository>
 			<id>nexus-public</id>
-			<name>Nexus Public Group</name>
 			<url>http://${repositoryUrl}/repository/maven-public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
 		</repository>
 	</repositories>
 	<pluginRepositories>
@@ -188,15 +168,9 @@
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>${jibMavenPluginVersion}</version>
 				<configuration>
-					<from>
-						<image>${imageJibVersion}</image>
-					</from>
+					<from><image>${imageJibVersion}</image></from>
 					<to>
-						<image>${imageK8SName}</image>
-						<auth>
-							<username>${nexusUsername}</username>
-							<password>${nexusPassword}</password>
-						</auth>
+						<image>${registryUrl}/${project.groupId}/${project.artifactId}:latest</image>
 					</to>
 					<allowInsecureRegistries>true</allowInsecureRegistries>
 				</configuration>
