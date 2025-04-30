@@ -46,7 +46,9 @@ spec:
     - name: your-image-pull-secret
 """
       yamlMergeStrategy 'override'
-      podRetention 'Never'
+      podRetention {
+        never()
+      }
     }
   }
 
@@ -57,7 +59,7 @@ spec:
   environment {
     SONARQUBE_SCANNER_HOME = tool 'SonarQubeScanner'
     IMAGE_NAME = 'user-management'
-    IMAGE_TAG = 'latest'
+    IMAGE_TAG  = 'latest'
     GROUP_ID    = 'com.green.energy.tracker'
   }
 
