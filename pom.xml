@@ -26,8 +26,10 @@
 		<avroPluginVersion>1.10.2</avroPluginVersion>
 		<jibMavenPluginVersion>3.4.1</jibMavenPluginVersion>
 		<imageJibVersion>openjdk:17-jdk-slim</imageJibVersion>
-		<repositoryUrl>nexus-repository.nexus.svc.cluster.local:8081</repositoryUrl>
-		<registryUrl>nexus-registry.nexus.svc.cluster.local:64395</registryUrl>
+		<nexusUsername>${env.NEXUS_USERNAME}</nexusUsername>
+		<nexusPassword>${env.NEXUS_PASSWORD}</nexusPassword>
+		<repositoryUrl>${env.SPRING_NEXUS_REPOSITORY_URL}</repositoryUrl>
+		<registryUrl>${env.SPRING_NEXUS_REGISTRY_URL}</registryUrl>
 		<imageK8SName>${registryUrl}/${project.groupId}/${project.artifactId}:latest</imageK8SName>
 	</properties>
 	<repositories>
@@ -192,10 +194,8 @@
 					<to>
 						<image>${imageK8SName}</image>
 						<auth>
-							<!--suppress UnresolvedMavenProperty -->
-							<username>${env.NEXUS_USERNAME}</username>
-							<!--suppress UnresolvedMavenProperty -->
-							<password>${env.NEXUS_PASSWORD}</password>
+							<username>${nexusUsername}</username>
+							<password>${nexusPassword}</password>
 						</auth>
 					</to>
 					<allowInsecureRegistries>true</allowInsecureRegistries>
