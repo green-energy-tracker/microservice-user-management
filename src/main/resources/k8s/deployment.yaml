@@ -17,7 +17,7 @@ spec:
         - name: nexus-registry-secret
       containers:
         - name: user-management
-          image: nexus-repository.local/com.green.energy.tracker/user-management:latest
+          image: nexus-registry.local/com.green.energy.tracker/user-management:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
