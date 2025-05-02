@@ -163,22 +163,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>jib-maven-plugin</artifactId>
-				<version>${jibMavenPluginVersion}</version>
-				<configuration>
-					<from><image>${imageJibVersion}</image></from>
-					<to>
-						<image>${registryUrl}/${project.groupId}/${project.artifactId}:latest</image>
-						<auth>
-							<username>${env.NEXUS_USERNAME}</username>
-							<password>${env.NEXUS_PASSWORD}</password>
-						</auth>
-					</to>
-					<allowInsecureRegistries>true</allowInsecureRegistries>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 
