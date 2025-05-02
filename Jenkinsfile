@@ -6,5 +6,4 @@ templatePipelineJenkins(
     groupId:    'com.green.energy.tracker',
     mavenSettingsConfig: 'nexus-settings',
     nexusCredentialsId: 'nexus-docker-creds',
-    serviceAccountName: 'jenkins-agent'
 )
