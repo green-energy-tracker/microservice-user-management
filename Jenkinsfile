@@ -1,6 +1,6 @@
-@Library('templatePipelineJenkins') _
+@Library('ciPipeline') _
 
-templatePipelineJenkins(
+ciPipeline(
     imageName: 'user-management-pod',
     imageTag:  'latest',
     groupId:    'com.green.energy.tracker'
