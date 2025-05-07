@@ -16,6 +16,7 @@
 	<url/>
 	<properties>
 		<java.version>17</java.version>
+		<schemaRegistrySubject>^user-events-(key|value)$</schemaRegistrySubject>
 	</properties>
 
 	<dependencies>
@@ -146,6 +147,34 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>io.confluent</groupId>
+				<artifactId>kafka-schema-registry-maven-plugin</artifactId>
+				<version>${schemaRegistryPluginVersion}</version>
+				<configuration>
+					<schemaRegistryUrls>
+						<param>${schemaRegistryUrl}</param>
+					</schemaRegistryUrls>
+					<outputDirectory>src/main/resources/avro</outputDirectory>
+					<subjectPatterns>
+						<param>${schemaRegistrySubject}</param>
+					</subjectPatterns>
+					<compatibilityLevels/>
+					<messagePath/>
+					<outputPath/>
+					<previousSchemaPaths/>
+					<schemas/>
+					<subjects/>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>download</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
