@@ -153,13 +153,7 @@
 				<version>3.4.1</version>
 				<configuration>
 					<from><image>openjdk:17-jdk-slim</image></from>
-					<to>
-						<image>${registryUrl}/${project.artifactId}:${project.version}</image>
-						<auth>
-							<username>admin</username>
-							<password>admin123</password>
-						</auth>
-					</to>
+					<to><image>${registryUrl}/${project.artifactId}:${project.version}</image></to>
 					<allowInsecureRegistries>true</allowInsecureRegistries>
 				</configuration>
 			</plugin>
