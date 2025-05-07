@@ -154,7 +154,7 @@
 				<configuration>
 					<from><image>openjdk:17-jdk-slim</image></from>
 					<to>
-						<image>${registryUrl}/green-energy-docker-hosted/${project.artifactId}:${project.version}</image>
+						<image>${registryUrl}/${project.artifactId}:${project.version}</image>
 						<auth>
 							<username>admin</username>
 							<password>admin123</password>
