@@ -50,12 +50,12 @@ public class KafkaStreamsExceptionHandler implements DeserializationExceptionHan
         return ProductionExceptionHandlerResponse.CONTINUE;
     }
 
-    public  <K, V> void sendToDlt(Throwable throwable, String topic, K key, V value) {
+    public  <K, V> void sendToDlt(Throwable throwable, String topic, K key, V payload) {
         log.error("Sending record to DLQ due to exception", throwable);
         KafkaDLTRecord dlqRecord = KafkaDLTRecord.builder()
                 .topic(topic)
                 .key(Objects.nonNull(key) ? key.toString() : null)
-                .value(Objects.nonNull(value) ? value.toString() : "")
+                .value(Objects.nonNull(payload) ? payload.toString() : "")
                 .errorMessage(throwable.getMessage())
                 .timestamp(new Date().getTime())
                 .build();

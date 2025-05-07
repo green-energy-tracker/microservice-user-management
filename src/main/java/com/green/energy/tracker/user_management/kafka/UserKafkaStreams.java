@@ -9,11 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.*;
-import org.apache.kafka.streams.errors.StreamsUncaughtExceptionHandler;
 import org.apache.kafka.streams.kstream.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.annotation.Bean;
-import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.stereotype.Component;
 import java.util.*;
 
@@ -28,28 +26,21 @@ public class UserKafkaStreams {
     private String userEventsTopic;
 
     @Bean
-    public Topology build(
-            KafkaStreamsConfiguration kafkaStreamsConfiguration,
-            KafkaStreamsExceptionHandler kafkaStreamsExceptionHandler,
-            StreamsBuilder streamsBuilder,
-            CustomSerdes customSerdes,
-            @Qualifier("UserServiceV1") UserService userService,
-            @Qualifier("keycloakEventServiceV1") AuthServerEventService authServerEventService
-    ) {
-        streamsBuilder.stream(authServerEventsTopic, Consumed.with(Serdes.String(),Serdes.String()))
-                .peek((key,event)-> log.info("Consuming events from topic {} : {} ",authServerEventsTopic, event))
+    public KStream<String, String> userKStream(StreamsBuilder streamsBuilder, KafkaStreamsExceptionHandler kafkaStreamsExceptionHandler,
+                                               CustomSerdes customSerdes, @Qualifier("UserServiceV1") UserService userService,
+                                               @Qualifier("keycloakEventServiceV1") AuthServerEventService authServerEventService) {
+
+        KStream<String, String> userKStream = streamsBuilder.stream(authServerEventsTopic, Consumed.with(Serdes.String(),Serdes.String()));
+
+        userKStream.peek((key,event)-> log.info("Consuming events from topic {} : {} ",authServerEventsTopic, event))
                 .mapValues((key, event) -> handleEvent(kafkaStreamsExceptionHandler,authServerEventService,userService, key,event))
                 .filter((key,optEvent)-> optEvent.isPresent())
                 .mapValues(Optional::get)
                 .map((key, user) -> new KeyValue<>(user.getUsername(), user))
                 .peek((key,user)-> log.info("Publishing user {} to topic {}",user,userEventsTopic))
                 .to(userEventsTopic, Produced.with(Serdes.String(), customSerdes.userSerde()));
+        return userKStream;
 
-        var topology = streamsBuilder.build();
-        var kafkaStreams = new KafkaStreams(topology, kafkaStreamsConfiguration.asProperties());
-        kafkaStreams.setUncaughtExceptionHandler(this::handleUncaughtException);
-        kafkaStreams.start();
-        return topology;
     }
 
     private Optional<User> handleEvent(KafkaStreamsExceptionHandler exceptionHandler,
@@ -64,10 +55,5 @@ public class UserKafkaStreams {
             exceptionHandler.sendToDlt(e,authServerEventsTopic,key,event);
         }
         return Optional.empty();
-    }
-
-    private StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse handleUncaughtException(Throwable throwable){
-        log.error("Uncaught Exception user event stream", throwable);
-        return StreamsUncaughtExceptionHandler.StreamThreadExceptionResponse.REPLACE_THREAD;
     }
 }
