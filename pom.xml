@@ -152,6 +152,14 @@
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>${jibMavenPluginVersion}</version>
 				<configuration>
+					<from><image>${imageJibVersion}</image></from>
+					<to>
+						<image>${registryUrl}/${project.groupId}/${artifactId}/${version}</image>
+						<auth>
+							<username>${nexusUsername}</username>
+							<password>${nexusPassword}</password>
+						</auth>
+					</to>
 					<allowInsecureRegistries>true</allowInsecureRegistries>
 				</configuration>
 			</plugin>
