@@ -23,7 +23,7 @@ spring:
           url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
     topic:
       user-events: ${SPRING_KAFKA_TOPIC_USER_EVENTS}
-      user-events-dlq: ${SPRING_KAFKA_TOPIC_USER_EVENTS_DLQ}
+      user-events-dlt: ${SPRING_KAFKA_TOPIC_USER_EVENTS_DLT}
       auth-server-events: ${SPRING_KAFKA_TOPIC_AUTH_SERVER_EVENTS}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer

@@ -18,16 +18,16 @@ import java.util.*;
 @NoArgsConstructor
 public class KafkaStreamsExceptionHandler implements DeserializationExceptionHandler, ProductionExceptionHandler {
 
-    @Value("${spring.kafka.topic.user-events-dlq}")
-    private String userEventsTopicDLQ;
+    @Value("${spring.kafka.topic.user-events-dlt}")
+    private String userEventsTopicDLT;
 
     @Autowired
-    private KafkaTemplate<String, KafkaDlqRecord> kafkaTemplate;
+    private KafkaTemplate<String, KafkaDLTRecord> kafkaTemplate;
 
     @Override
     public DeserializationHandlerResponse handle(ProcessorContext processorContext, ConsumerRecord<byte[], byte[]> consumerRecord, Exception exception) {
         log.error("Deserialization error for message with key: {}", consumerRecord.key(), exception);
-        sendToDlq(exception, consumerRecord.topic(), consumerRecord.key(), consumerRecord.value());
+        sendToDlt(exception, consumerRecord.topic(), consumerRecord.key(), consumerRecord.value());
         return DeserializationHandlerResponse.CONTINUE;
     }
 
@@ -39,26 +39,26 @@ public class KafkaStreamsExceptionHandler implements DeserializationExceptionHan
     @Override
     public ProductionExceptionHandlerResponse handle(ProducerRecord<byte[], byte[]> producerRecord, Exception e) {
         log.error("Production error for message with key: {}", producerRecord.key(), e);
-        sendToDlq(e, producerRecord.topic(), producerRecord.key(), producerRecord.value());
+        sendToDlt(e, producerRecord.topic(), producerRecord.key(), producerRecord.value());
         return ProductionExceptionHandlerResponse.CONTINUE;
     }
 
     @Override
     public ProductionExceptionHandlerResponse handleSerializationException(ProducerRecord producerRecord, Exception exception) {
         log.error("Serialization error for message with key: {}", producerRecord.key(), exception);
-        sendToDlq(exception, producerRecord.topic(), producerRecord.key(), producerRecord.value());
+        sendToDlt(exception, producerRecord.topic(), producerRecord.key(), producerRecord.value());
         return ProductionExceptionHandlerResponse.CONTINUE;
     }
 
-    public  <K, V> void sendToDlq(Throwable throwable, String topic, K key, V value) {
+    public  <K, V> void sendToDlt(Throwable throwable, String topic, K key, V value) {
         log.error("Sending record to DLQ due to exception", throwable);
-        KafkaDlqRecord dlqRecord = KafkaDlqRecord.builder()
+        KafkaDLTRecord dlqRecord = KafkaDLTRecord.builder()
                 .topic(topic)
                 .key(Objects.nonNull(key) ? key.toString() : null)
                 .value(Objects.nonNull(value) ? value.toString() : "")
                 .errorMessage(throwable.getMessage())
                 .timestamp(new Date().getTime())
                 .build();
-        kafkaTemplate.send(userEventsTopicDLQ, dlqRecord.getKey(), dlqRecord);
+        kafkaTemplate.send(userEventsTopicDLT, dlqRecord.getKey(), dlqRecord);
     }
 }

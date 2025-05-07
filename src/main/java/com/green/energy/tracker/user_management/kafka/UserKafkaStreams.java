@@ -61,7 +61,7 @@ public class UserKafkaStreams {
                 return Optional.ofNullable(userService.handleUserEvent(entry.getKey(), entry.getValue()));
             }
         } catch (JsonProcessingException | PersistenceException e) {
-            exceptionHandler.sendToDlq(e,authServerEventsTopic,key,event);
+            exceptionHandler.sendToDlt(e,authServerEventsTopic,key,event);
         }
         return Optional.empty();
     }
