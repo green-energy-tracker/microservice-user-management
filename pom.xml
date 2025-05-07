@@ -156,8 +156,8 @@
 					<to>
 						<image>${registryUrl}/${project.groupId}/${artifactId}/${version}</image>
 						<auth>
-							<username>${env.NEXUS_USERNAME}</username>
-							<password>${env.NEXUS_PASSWORD}</password>
+							<username>admin</username>
+							<password>admin123</password>
 						</auth>
 					</to>
 					<allowInsecureRegistries>true</allowInsecureRegistries>
