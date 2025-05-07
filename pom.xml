@@ -150,9 +150,9 @@
 			<plugin>
 				<groupId>com.google.cloud.tools</groupId>
 				<artifactId>jib-maven-plugin</artifactId>
-				<version>${jibMavenPluginVersion}</version>
+				<version>3.4.1</version>
 				<configuration>
-					<from><image>${imageJibVersion}</image></from>
+					<from><image>openjdk:17-jdk-slim</image></from>
 					<to>
 						<image>${registryUrl}/green-energy-docker-hosted/${project.artifactId}:${project.version}</image>
 						<auth>
