@@ -23,7 +23,6 @@ public class KafkaProducer {
     @Value("${spring.kafka.properties.schema.registry.cache-capacity}")
     private Integer schemaRegistryCacheCapacity;
     private final KafkaTemplate<String, UserEventPayload> kafkaTemplate;
-    private final ModelMapper modelMapper;
 
     public void sendMessage(UserEvent userEvent, User user){
         UserEventPayload userEventPayload = generatePayload(userEvent,user);
