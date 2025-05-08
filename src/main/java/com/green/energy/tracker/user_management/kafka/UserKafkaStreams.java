@@ -65,7 +65,7 @@ public class UserKafkaStreams {
                     )
                     .build();
         } catch (JsonProcessingException | PersistenceException e) {
-            exceptionHandler.sendToDlt(e,authServerEventsTopic,key,event);
+            exceptionHandler.sendToDltBusinessException(e,authServerEventsTopic,key,event);
             return UserEventPayload.newBuilder().build();
         }
     }
