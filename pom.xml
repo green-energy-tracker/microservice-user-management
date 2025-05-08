@@ -97,7 +97,7 @@
 		<dependency>
 			<groupId>io.confluent</groupId>
 			<artifactId>kafka-schema-registry-client</artifactId>
-			<version>${avroSchemaVersion}</version>
+			<version>${avroSerdeVersion}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.avro</groupId>

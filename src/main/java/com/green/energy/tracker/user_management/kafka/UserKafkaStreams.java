@@ -14,10 +14,10 @@ import org.apache.kafka.streams.*;
 import org.apache.kafka.streams.kstream.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import java.util.*;
 
-@Component
+@Configuration
 @RequiredArgsConstructor
 @Slf4j
 public class UserKafkaStreams {
