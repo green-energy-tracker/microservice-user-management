@@ -28,14 +28,14 @@ public class UserKafkaStreams {
     private String userEventsTopic;
 
     @Bean
-    public KStream<String, String> userKStream(StreamsBuilder streamsBuilder, KafkaStreamsExceptionHandler kafkaStreamsExceptionHandler,
+    public KStream<String, String> userKStream(StreamsBuilder streamsBuilder,KafkaDLTService kafkaDLTService,
                                                CustomSerdes customSerdes, @Qualifier("UserServiceV1") UserService userService,
                                                @Qualifier("keycloakEventServiceV1") AuthServerEventService authServerEventService) {
 
         KStream<String, String> userKStream = streamsBuilder.stream(authServerEventsTopic, Consumed.with(Serdes.String(),Serdes.String()));
 
         userKStream.peek((key,event)-> log.info("Consuming events from topic {} : {} ",authServerEventsTopic, event))
-                .mapValues((key, event) -> handleEvent(kafkaStreamsExceptionHandler,authServerEventService,userService, key,event))
+                .mapValues((key, event) -> handleEvent(kafkaDLTService,authServerEventService,userService, key,event))
                 .filter((key,userEventPayload)-> Objects.nonNull(userEventPayload.getUser()) && Objects.nonNull(userEventPayload.getEventType()))
                 .peek((key,user)-> log.info("Publishing user {} to topic {}",user,userEventsTopic))
                 .to(userEventsTopic, Produced.with(Serdes.String(), customSerdes.userEventPayloadSerde()));
@@ -43,8 +43,7 @@ public class UserKafkaStreams {
 
     }
 
-    private UserEventPayload handleEvent(KafkaStreamsExceptionHandler exceptionHandler,
-                                         AuthServerEventService authServerEventService, UserService userService, String key, String event){
+    private UserEventPayload handleEvent(KafkaDLTService kafkaDLTService,AuthServerEventService authServerEventService, UserService userService, String key, String event){
         try {
             Optional<User> optUser = authServerEventService.getUser(event);
             Optional<UserEvent> optUserEvent = authServerEventService.getUserEvent(event);
@@ -65,7 +64,7 @@ public class UserKafkaStreams {
                     )
                     .build();
         } catch (JsonProcessingException | PersistenceException e) {
-            exceptionHandler.sendToDltBusinessException(e,authServerEventsTopic,key,event);
+            kafkaDLTService.sendToDlt(e,authServerEventsTopic,key,event);
             return UserEventPayload.newBuilder().build();
         }
     }
