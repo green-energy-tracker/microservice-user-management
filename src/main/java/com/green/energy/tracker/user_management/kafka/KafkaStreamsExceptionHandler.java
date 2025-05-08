@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 
 @Slf4j
+
 public class KafkaStreamsExceptionHandler implements DeserializationExceptionHandler, ProductionExceptionHandler {
 
-    @Autowired
     private static KafkaDLTService kafkaDLTService;
 
     @Autowired
