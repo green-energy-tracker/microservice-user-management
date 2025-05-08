@@ -86,20 +86,6 @@
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka-streams</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.confluent</groupId>
-			<artifactId>kafka-streams-avro-serde</artifactId>
-			<version>${avroSerdeVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.confluent</groupId>
-			<artifactId>kafka-schema-registry-client</artifactId>
-			<version>${avroSerdeVersion}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.avro</groupId>
 			<artifactId>avro</artifactId>
 			<version>${avroVersion}</version>

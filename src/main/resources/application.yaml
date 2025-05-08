@@ -26,8 +26,11 @@ spring:
       user-events-dlt: ${SPRING_KAFKA_TOPIC_USER_EVENTS_DLT}
       auth-server-events: ${SPRING_KAFKA_TOPIC_AUTH_SERVER_EVENTS}
     producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      key-serializer: ${SPRING_KAFKA_PRODUCER_KEY_SERIALIZER}
+      value-serializer: ${SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER}
+    consumer:
+      group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID}
+      value-deserializer: ${SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER}
   management:
     endpoints:
       web:

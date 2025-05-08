@@ -1,4 +1,4 @@
-package com.green.energy.tracker.user_management.service;
+package com.green.energy.tracker.user_management.service.user;
 
 import com.green.energy.tracker.user_management.model.User;
 import com.green.energy.tracker.user_management.model.UserEvent;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service("UserServiceV1")
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 

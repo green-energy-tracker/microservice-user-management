@@ -1,4 +1,4 @@
-package com.green.energy.tracker.user_management.service;
+package com.green.energy.tracker.user_management.service.user;
 
 import com.green.energy.tracker.user_management.model.User;
 import com.green.energy.tracker.user_management.model.UserEvent;
@@ -11,4 +11,5 @@ public interface UserService {
     void delete (User user);
     Optional<User> findById (Long id);
     User handleUserEvent(UserEvent userEvent, User user);
+
 }
