@@ -16,13 +16,19 @@ public class KeycloakEventServiceImpl implements AuthServerEventService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public Map<UserEvent,User> eventToUser(String event) throws JsonProcessingException {
+    public Optional<User> getUser(String event) throws JsonProcessingException {
         JsonNode root = objectMapper.readTree(event);
         if(!isEventPermitted(root))
-            return Collections.emptyMap();
-        UserEvent userEvent = UserEvent.valueOf(root.path(OPERATION_TYPE).asText().toUpperCase());
-        User user = getUserFromRepresentation(root);
-        return Map.of(userEvent,user);
+            return Optional.empty();
+        return Optional.of(getUserFromRepresentation(root));
+    }
+
+    @Override
+    public Optional<UserEvent> getUserEvent(String event) throws JsonProcessingException {
+        JsonNode root = objectMapper.readTree(event);
+        if(!isEventPermitted(root))
+            return Optional.empty();
+        return Optional.of(UserEvent.valueOf(root.path(OPERATION_TYPE).asText().toUpperCase()));
     }
 
     private boolean isEventPermitted(JsonNode root){
