@@ -1,6 +1,5 @@
 package com.green.energy.tracker.user_management.kafka;
 
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -8,22 +7,18 @@ import org.apache.kafka.streams.errors.DeserializationExceptionHandler;
 import org.apache.kafka.streams.errors.ProductionExceptionHandler;
 import org.apache.kafka.streams.processor.ProcessorContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Slf4j
-@Component
-@NoArgsConstructor
 public class KafkaStreamsExceptionHandler implements DeserializationExceptionHandler, ProductionExceptionHandler {
 
-    @Value("${spring.kafka.topic.user-events-dlt}")
-    private String userEventsTopicDLT;
+    @Autowired
+    private static KafkaDLTService kafkaDLTService;
 
     @Autowired
-    private KafkaTemplate<String, KafkaDLTRecord> kafkaTemplate;
+    public void setKafkaDLTService(KafkaDLTService kafkaDLTService) {
+        KafkaStreamsExceptionHandler.kafkaDLTService = kafkaDLTService;
+    }
 
     @Override
     public DeserializationHandlerResponse handle(ProcessorContext processorContext, ConsumerRecord<byte[], byte[]> consumerRecord, Exception exception) {
@@ -57,24 +52,13 @@ public class KafkaStreamsExceptionHandler implements DeserializationExceptionHan
             return;
         }
         if(record instanceof ProducerRecord<?, ?> producerRecord)
-            sendToDlt(exception,producerRecord.topic(),producerRecord.key(),producerRecord.value());
+            kafkaDLTService.sendToDlt(exception,producerRecord.topic(),producerRecord.key(),producerRecord.value());
         else if(record instanceof ConsumerRecord<?, ?> consumerRecord)
-            sendToDlt(exception,consumerRecord.topic(),consumerRecord.key(),consumerRecord.value());
+            kafkaDLTService.sendToDlt(exception,consumerRecord.topic(),consumerRecord.key(),consumerRecord.value());
     }
 
     public <K, V> void sendToDltBusinessException(Exception exception,String topic, K key, V payload){
-        sendToDlt(exception,topic,key,payload);
+        kafkaDLTService.sendToDlt(exception,topic,key,payload);
     }
 
-    private <K, V> void sendToDlt(Exception exception,String topic, K key, V payload){
-        log.error("Sending record to DLQ due to exception");
-        KafkaDLTRecord dlqRecord = KafkaDLTRecord.builder()
-                .topic(topic)
-                .key(Objects.nonNull(key) ? key.toString() : null)
-                .value(Objects.nonNull(payload) ? payload.toString() : "")
-                .errorMessage(exception.getMessage())
-                .timestamp(new Date().getTime())
-                .build();
-        kafkaTemplate.send(userEventsTopicDLT, dlqRecord.getKey(), dlqRecord);
-    }
 }
