@@ -50,11 +50,8 @@ public class KeycloakEventProcessor implements AuthServerEventProcessor {
     private KeycloakEvent deserializeSpecificRecord(GenericRecord authServerEvent) throws JsonProcessingException {
         log.info("JSON EVENT processing");
         return modelMapper.map(authServerEvent.getSchema().getFields().stream()
-                .filter(field -> Objects.nonNull(field.name()))
-                .collect(Collectors.toMap(
-                        Schema.Field::name,
-                        field -> authServerEvent.get(field.name()))
-                ),KeycloakEvent.class);
+                .map(Schema.Field::name)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(key-> key, authServerEvent::get)),KeycloakEvent.class);
     }
-
 }
