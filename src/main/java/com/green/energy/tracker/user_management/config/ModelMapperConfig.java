@@ -1,15 +1,15 @@
 package com.green.energy.tracker.user_management.config;
 
-import com.fasterxml.jackson.dataformat.avro.AvroMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AvroConfig {
+public class ModelMapperConfig {
 
     @Bean
-    public AvroMapper beanAvroMapper(){
-        return new AvroMapper();
+    public ModelMapper beanModelMapper(){
+        return new ModelMapper();
     }
 
 }

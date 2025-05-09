@@ -6,7 +6,6 @@ import com.green.energy.tracker.user_management.keycloak.KeycloakEventProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.specific.SpecificRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +20,8 @@ public class KafkaConsumer {
             topics = "${spring.kafka.topic.auth-server-events}",
             groupId = "${spring.kafka.consumer.group-id}"
     )
-    public void consume(SpecificRecord authServerEvent) throws JsonProcessingException {
+    public void consume(GenericRecord authServerEvent) throws JsonProcessingException {
         log.info(authServerEvent.toString());
-        //authServerEventProcessor.handleEvent(authServerEvent);
+        authServerEventProcessor.handleEvent(authServerEvent);
     }
 }
