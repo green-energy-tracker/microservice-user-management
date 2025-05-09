@@ -2,12 +2,14 @@ package com.green.energy.tracker.user_management.keycloak;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.avro.AvroMapper;
 import com.green.energy.tracker.user_management.kafka.KafkaProducer;
 import com.green.energy.tracker.user_management.model.User;
 import com.green.energy.tracker.user_management.model.UserEvent;
 import com.green.energy.tracker.user_management.service.authserver.AuthServerEventProcessor;
 import com.green.energy.tracker.user_management.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.avro.specific.SpecificRecord;
 import org.springframework.stereotype.Service;
 
 
@@ -19,10 +21,11 @@ public class KeycloakEventProcessor implements AuthServerEventProcessor {
     private final KeycloakUserService keycloakUserService;
     private final ObjectMapper mapper;
     private final KafkaProducer kafkaProducer;
+    private final AvroMapper avroMapper;
 
     @Override
-    public void handleEvent(String event) throws JsonProcessingException {
-        KeycloakEvent keycloakEvent = mapper.readValue(event, KeycloakEvent.class);
+    public void handleEvent(SpecificRecord authServerEvent) throws JsonProcessingException {
+        KeycloakEvent keycloakEvent = deserializeSpecificRecord(authServerEvent);
         User user = getUser(keycloakEvent);
         UserEvent userEvent = getUserEvent(keycloakEvent);
         userService.handleUserEvent(userEvent,user);
@@ -37,6 +40,11 @@ public class KeycloakEventProcessor implements AuthServerEventProcessor {
     private UserEvent getUserEvent(KeycloakEvent keycloakEvent) {
         return keycloakUserService.getUserEvent(keycloakEvent)
                 .orElseThrow(() -> new RuntimeException("UserEvent not found for event: " + keycloakEvent));
+    }
+
+    private KeycloakEvent deserializeSpecificRecord(SpecificRecord authServerEvent) throws JsonProcessingException {
+        String jsonEvent = avroMapper.writerFor(SpecificRecord.class).writeValueAsString(authServerEvent);
+        return mapper.readValue(jsonEvent, KeycloakEvent.class);
     }
 
 }

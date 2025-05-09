@@ -28,9 +28,15 @@ spring:
     producer:
       key-serializer: ${SPRING_KAFKA_PRODUCER_KEY_SERIALIZER}
       value-serializer: ${SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER}
+      properties:
+        schema.registry.url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
+        use.latest.version: ${SPRING_KAFKA_PRODUCER_PROPERTIES_USE_LATEST_VERSION}
     consumer:
       group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID}
       value-deserializer: ${SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER}
+      properties:
+        specific.avro.reader: ${SPRING_KAFKA_CONSUMER_PROPERTIES_SPECIFIC_AVRO_READER}
+        schema.registry.url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
   management:
     endpoints:
       web:
