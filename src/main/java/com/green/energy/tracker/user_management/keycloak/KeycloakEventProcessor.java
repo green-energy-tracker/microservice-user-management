@@ -12,6 +12,8 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -48,6 +50,7 @@ public class KeycloakEventProcessor implements AuthServerEventProcessor {
     private KeycloakEvent deserializeSpecificRecord(GenericRecord authServerEvent) throws JsonProcessingException {
         log.info("JSON EVENT processing");
         return modelMapper.map(authServerEvent.getSchema().getFields().stream()
+                .filter(field -> Objects.nonNull(field.name()))
                 .collect(Collectors.toMap(
                         Schema.Field::name,
                         field -> authServerEvent.get(field.name()))
