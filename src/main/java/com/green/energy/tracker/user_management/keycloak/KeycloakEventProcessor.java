@@ -47,7 +47,8 @@ public class KeycloakEventProcessor implements AuthServerEventProcessor {
     }
 
     private KeycloakEvent deserializeSpecificRecord(GenericRecord authServerEvent) throws JsonProcessingException {
-        String jsonEvent = avroMapper.writerFor(SpecificRecord.class).writeValueAsString(authServerEvent);
+        log.info("JSON EVENT processing");
+        String jsonEvent = avroMapper.writerFor(GenericRecord.class).writeValueAsString(authServerEvent);
         log.info("JSON EVENT: {}",jsonEvent);
         return mapper.readValue(jsonEvent, KeycloakEvent.class);
     }
