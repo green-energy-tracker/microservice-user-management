@@ -29,7 +29,7 @@ public class KeycloakEventProcessor implements AuthServerEventProcessor {
 
     @Override
     public void handleEvent(GenericRecord authServerEvent) throws JsonProcessingException {
-        KeycloakEvent keycloakEvent = deserializeSpecificRecord(authServerEvent);
+        KeycloakEvent keycloakEvent = deserializeGenericRecord(authServerEvent);
         log.info("keycloakEvent: {}", keycloakEvent);
         User user = getUser(keycloakEvent);
         UserEvent userEvent = getUserEvent(keycloakEvent);
@@ -47,8 +47,9 @@ public class KeycloakEventProcessor implements AuthServerEventProcessor {
                 .orElseThrow(() -> new RuntimeException("UserEvent not found for event: " + keycloakEvent));
     }
 
-    private KeycloakEvent deserializeSpecificRecord(GenericRecord authServerEvent) throws JsonProcessingException {
+    private KeycloakEvent deserializeGenericRecord(GenericRecord authServerEvent){
         log.info("JSON EVENT processing");
+        authServerEvent.getSchema().getFields().forEach(field -> log.info(field.name()));
         return modelMapper.map(authServerEvent.getSchema().getFields().stream()
                 .map(Schema.Field::name)
                 .filter(Objects::nonNull)
