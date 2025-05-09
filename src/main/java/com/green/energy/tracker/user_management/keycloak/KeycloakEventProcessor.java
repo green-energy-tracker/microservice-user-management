@@ -9,6 +9,7 @@ import com.green.energy.tracker.user_management.model.UserEvent;
 import com.green.energy.tracker.user_management.service.authserver.AuthServerEventProcessor;
 import com.green.energy.tracker.user_management.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.specific.SpecificRecord;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class KeycloakEventProcessor implements AuthServerEventProcessor {
 
     private final UserService userService;
@@ -27,6 +29,7 @@ public class KeycloakEventProcessor implements AuthServerEventProcessor {
     @Override
     public void handleEvent(GenericRecord authServerEvent) throws JsonProcessingException {
         KeycloakEvent keycloakEvent = deserializeSpecificRecord(authServerEvent);
+        log.info("keycloakEvent: {}", keycloakEvent);
         User user = getUser(keycloakEvent);
         UserEvent userEvent = getUserEvent(keycloakEvent);
         userService.handleUserEvent(userEvent,user);
@@ -45,6 +48,7 @@ public class KeycloakEventProcessor implements AuthServerEventProcessor {
 
     private KeycloakEvent deserializeSpecificRecord(GenericRecord authServerEvent) throws JsonProcessingException {
         String jsonEvent = avroMapper.writerFor(SpecificRecord.class).writeValueAsString(authServerEvent);
+        log.info("JSON EVENT: {}",jsonEvent);
         return mapper.readValue(jsonEvent, KeycloakEvent.class);
     }
 

@@ -22,6 +22,6 @@ public class KafkaConsumer {
     )
     public void consume(GenericRecord authServerEvent) throws JsonProcessingException {
         log.info(authServerEvent.toString());
-        //authServerEventProcessor.handleEvent(authServerEvent);
+        authServerEventProcessor.handleEvent(authServerEvent);
     }
 }
