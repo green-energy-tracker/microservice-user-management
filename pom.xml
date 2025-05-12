@@ -16,7 +16,8 @@
 	<url/>
 	<properties>
 		<java.version>17</java.version>
-		<schemaRegistrySubject>^user-events-(key|value)$</schemaRegistrySubject>
+		<userEventSubject>^user-events-(key|value)$</userEventSubject>
+		<keycloakEventSubject>^keycloak_admin_events-(key|value)$</keycloakEventSubject>
 	</properties>
 
 	<dependencies>
@@ -166,7 +167,8 @@
 					</schemaRegistryUrls>
 					<outputDirectory>src/main/resources/avro</outputDirectory>
 					<subjectPatterns>
-						<param>${schemaRegistrySubject}</param>
+						<param>${userEventSubject}</param>
+						<param>${keycloakEventSubject}</param>
 					</subjectPatterns>
 					<compatibilityLevels/>
 					<messagePath/>
