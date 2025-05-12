@@ -20,18 +20,9 @@ public class KeycloakKafkaConsumer{ //implements AuthServerConsumerKafka<Keycloa
             topics = "${spring.kafka.topic.auth-server-events}",
             groupId = "${spring.kafka.consumer.group-id}"
     )
-    public void consumeEvent(ConsumerRecord<Object, Object> record) {
-        Object value = record.value();
+    public void consumeEvent(KeycloakAdminEventDto record) {
 
-        System.out.println("==== Tipo messaggio: " + value.getClass().getName());
-
-        if (value instanceof GenericRecord) {
-            System.out.println("Messaggio è un GenericRecord.");
-            GenericRecord genericRecord = (GenericRecord) value;
-        } else {
-            System.out.println("Messaggio è un record Avro specifico.");
-            System.out.println("Contenuto: " + value);
-        }
+        log.info(record.toString());
         //log.info(keycloakAdminEventDto.toString());
         //keycloakEventProcessor.handleEvent(keycloakAdminEventDto);
     }
