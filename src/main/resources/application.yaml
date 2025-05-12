@@ -30,21 +30,14 @@ spring:
       value-serializer: ${SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER}
       properties:
         schema.registry.url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
-        use.latest.version: ${SPRING_KAFKA_PRODUCER_PROPERTIES_USE_LATEST_VERSION}
     consumer:
       group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID}
       key-deserializer: ${SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER}
       value-deserializer: ${SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER}
-      properties:
-        specific.avro.reader: ${SPRING_KAFKA_CONSUMER_PROPERTIES_SPECIFIC_AVRO_READER}
-        schema.registry.url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
   management:
     endpoints:
       web:
         exposure:
           include: ${SPRING_MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE}
-  logging:
-    level:
-      io.confluent.kafka.serializers.KafkaAvroDeserializer: DEBUG
 server:
   port: ${SPRING_SERVER_PORT}

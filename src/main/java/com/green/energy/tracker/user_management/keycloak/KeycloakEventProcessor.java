@@ -2,14 +2,13 @@ package com.green.energy.tracker.user_management.keycloak;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.green.energy.tracker.configuration.domain.event.KeycloakAdminEventDto;
 import com.green.energy.tracker.user_management.kafka.KafkaProducer;
 import com.green.energy.tracker.user_management.model.User;
 import com.green.energy.tracker.user_management.model.UserEvent;
-import com.green.energy.tracker.user_management.service.authserver.AuthServerEventProcessor;
 import com.green.energy.tracker.user_management.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.KafkaException;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +16,16 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class KeycloakEventProcessor implements AuthServerEventProcessor<KeycloakAdminEventDto> {
+public class KeycloakEventProcessor {
 
     private final UserService userService;
-    private final KeycloakUserService keycloakUserService;
     private final KafkaProducer kafkaProducer;
 
-    @Override
-    public void handleEvent(KeycloakAdminEventDto keycloakAdminEventDto) {
+    public void handleEvent(ConsumerRecord<String, KeycloakEvent> authServerEvent) {
         try {
-            User user = getUser(keycloakAdminEventDto);
-            UserEvent userEvent = getUserEvent(keycloakAdminEventDto);
+            var keycloakEvent = authServerEvent.value();
+            var user = getUser(keycloakEvent);
+            var userEvent = getUserEvent(keycloakEvent);
             userService.handleUserEvent(userEvent,user);
             //kafkaProducer.sendMessage(userEvent,user);
         } catch (JsonProcessingException e) {
@@ -35,13 +33,13 @@ public class KeycloakEventProcessor implements AuthServerEventProcessor<Keycloak
         }
     }
 
-    private User getUser(KeycloakAdminEventDto keycloakAdminEventDto) throws JsonProcessingException {
-        return keycloakUserService.getUser(keycloakAdminEventDto)
-                .orElseThrow(() -> new JsonParseException("User not found for event: " + keycloakAdminEventDto));
+    private User getUser(KeycloakEvent keycloakEvent) throws JsonProcessingException {
+        return KeycloakUtil.getUser(keycloakEvent)
+                .orElseThrow(() -> new JsonParseException("User not found for event: " + keycloakEvent));
     }
 
-    private UserEvent getUserEvent(KeycloakAdminEventDto keycloakAdminEventDto) throws JsonProcessingException {
-        return keycloakUserService.getUserEvent(keycloakAdminEventDto)
-                .orElseThrow(() -> new JsonParseException("UserEvent not found for event: " + keycloakAdminEventDto));
+    private UserEvent getUserEvent(KeycloakEvent keycloakEvent) throws JsonProcessingException {
+        return KeycloakUtil.getUserEvent(keycloakEvent)
+                .orElseThrow(() -> new JsonParseException("UserEvent not found for event: " + keycloakEvent));
     }
 }
