@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class KeycloakEvent {
     @JsonProperty("id_event")
     private Long idEvent;
