@@ -18,7 +18,7 @@ public class kafkaConsumer {
             topics = "${spring.kafka.topic.auth-server-events}",
             groupId = "${spring.kafka.consumer.group-id}"
     )
-    public void consumeEvent(ConsumerRecord<String, KeycloakEvent> keycloakEvent){
+    public void consumeEvent(KeycloakEvent keycloakEvent){
         log.info("Consuming Keycloak event: {}", keycloakEvent);
         keycloakEventProcessor.handleEvent(keycloakEvent);
     }

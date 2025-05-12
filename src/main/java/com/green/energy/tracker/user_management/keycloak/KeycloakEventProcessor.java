@@ -20,9 +20,8 @@ public class KeycloakEventProcessor {
     private final UserService userService;
     private final KafkaProducer kafkaProducer;
 
-    public void handleEvent(ConsumerRecord<String, KeycloakEvent> authServerEvent) {
+    public void handleEvent(KeycloakEvent keycloakEvent) {
         try {
-            var keycloakEvent = authServerEvent.value();
 
             log.info("Mapping Keycloak event [{}] to User",keycloakEvent);
             var user = getUser(keycloakEvent);
