@@ -34,6 +34,9 @@ spring:
       group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID}
       key-deserializer: ${SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER}
       value-deserializer: ${SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER}
+      properties:
+        spring.json.trusted.packages: ${SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_JSON_TRUSTED_PACKAGES}
+        spring.json.value.default.type: ${SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_JSON_VALUE_DEFAULT_TYPE}
   management:
     endpoints:
       web:
