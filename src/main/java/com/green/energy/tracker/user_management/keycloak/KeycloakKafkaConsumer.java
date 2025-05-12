@@ -20,7 +20,7 @@ public class KeycloakKafkaConsumer{ //implements AuthServerConsumerKafka<Keycloa
             topics = "${spring.kafka.topic.auth-server-events}",
             groupId = "${spring.kafka.consumer.group-id}"
     )
-    public void consumeRaw(Object payload) {
+    public void consumeRaw(KeycloakAdminEventDto payload) {
         log.info("Class of payload: {}", payload.getClass().getName());
         log.info("Payload content: {}", payload.toString());
     }
