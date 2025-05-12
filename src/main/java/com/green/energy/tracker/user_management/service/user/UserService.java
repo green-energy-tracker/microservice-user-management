@@ -10,6 +10,5 @@ public interface UserService {
     User update (User user);
     void delete (User user);
     Optional<User> findById (Long id);
-    User handleUserEvent(UserEvent userEvent, User user);
 
 }

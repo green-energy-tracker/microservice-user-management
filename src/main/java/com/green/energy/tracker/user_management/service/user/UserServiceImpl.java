@@ -34,20 +34,4 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id);
     }
 
-    @Override
-    public User handleUserEvent(UserEvent userEvent, User user) {
-        switch (userEvent){
-            case CREATE -> {
-                return save(user);
-            }
-            case UPDATE -> {
-                return update(user);
-            }
-            case DELETE -> {
-                delete(user);
-                return user;
-            }
-        }
-        return user;
-    }
 }

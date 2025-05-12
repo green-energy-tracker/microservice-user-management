@@ -3,8 +3,7 @@ package com.green.energy.tracker.user_management.keycloak;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.green.energy.tracker.user_management.kafka.KafkaProducer;
-import com.green.energy.tracker.user_management.model.User;
-import com.green.energy.tracker.user_management.model.UserEvent;
+import com.green.energy.tracker.user_management.model.*;
 import com.green.energy.tracker.user_management.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +23,22 @@ public class KeycloakEventProcessor {
     public void handleEvent(ConsumerRecord<String, KeycloakEvent> authServerEvent) {
         try {
             var keycloakEvent = authServerEvent.value();
+
+            log.info("Mapping Keycloak event [{}] to User",keycloakEvent);
             var user = getUser(keycloakEvent);
+            log.info("Mapped Keycloak event [{}] to User [{}]",keycloakEvent,user);
+
+            log.info("Mapping Keycloak event [{}] to UserEvent",keycloakEvent);
             var userEvent = getUserEvent(keycloakEvent);
-            userService.handleUserEvent(userEvent,user);
+            log.info("Mapped Keycloak event [{}] to UserEvent [{}]",keycloakEvent,userEvent);
+
+            log.info("Start DB operations on entity USER");
+            switch (userEvent){
+                case CREATE -> userService.save(user);
+                case UPDATE -> userService.update(user);
+                case DELETE -> userService.delete(user);
+            }
+            log.info("End DB operations on entity USER");
             //kafkaProducer.sendMessage(userEvent,user);
         } catch (JsonProcessingException e) {
             throw new KafkaException(e);
