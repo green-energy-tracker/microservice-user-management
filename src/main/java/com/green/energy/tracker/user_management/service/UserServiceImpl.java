@@ -1,7 +1,6 @@
-package com.green.energy.tracker.user_management.service.user;
+package com.green.energy.tracker.user_management.service;
 
 import com.green.energy.tracker.user_management.model.User;
-import com.green.energy.tracker.user_management.model.UserEvent;
 import com.green.energy.tracker.user_management.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

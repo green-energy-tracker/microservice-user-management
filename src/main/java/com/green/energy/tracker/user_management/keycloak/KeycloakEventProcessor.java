@@ -4,11 +4,10 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.green.energy.tracker.user_management.kafka.KafkaProducer;
 import com.green.energy.tracker.user_management.model.*;
-import com.green.energy.tracker.user_management.service.user.UserService;
+import com.green.energy.tracker.user_management.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.KafkaException;
 import org.springframework.stereotype.Service;
 
 
