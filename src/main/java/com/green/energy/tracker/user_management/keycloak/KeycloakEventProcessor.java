@@ -20,28 +20,24 @@ public class KeycloakEventProcessor {
     private final UserService userService;
     private final KafkaProducer kafkaProducer;
 
-    public void handleEvent(ConsumerRecord<String,KeycloakEvent> keycloakEventRecord) {
-        try {
-            var keycloakEvent = keycloakEventRecord.value();
-            log.info("Mapping Keycloak event [{}] to User",keycloakEvent);
-            var user = getUser(keycloakEvent);
-            log.info("Mapped Keycloak event [{}] to User [{}]",keycloakEvent,user);
+    public void handleEvent(ConsumerRecord<String,KeycloakEvent> keycloakEventRecord) throws JsonProcessingException {
+        var keycloakEvent = keycloakEventRecord.value();
+        log.info("Mapping Keycloak event [{}] to User",keycloakEvent);
+        var user = getUser(keycloakEvent);
+        log.info("Mapped Keycloak event [{}] to User [{}]",keycloakEvent,user);
 
-            log.info("Mapping Keycloak event [{}] to UserEvent",keycloakEvent);
-            var userEvent = getUserEvent(keycloakEvent);
-            log.info("Mapped Keycloak event [{}] to UserEvent [{}]",keycloakEvent,userEvent);
+        log.info("Mapping Keycloak event [{}] to UserEvent",keycloakEvent);
+        var userEvent = getUserEvent(keycloakEvent);
+        log.info("Mapped Keycloak event [{}] to UserEvent [{}]",keycloakEvent,userEvent);
 
-            log.info("Start DB operations on entity USER");
-            switch (userEvent){
-                case CREATE -> userService.save(user);
-                case UPDATE -> userService.update(user);
-                case DELETE -> userService.delete(user);
-            }
-            log.info("End DB operations on entity USER");
-            //kafkaProducer.sendMessage(userEvent,user);
-        } catch (JsonProcessingException e) {
-            throw new KafkaException(e);
+        log.info("Start DB operations on entity USER");
+        switch (userEvent){
+            case CREATE -> userService.save(user);
+            case UPDATE -> userService.update(user);
+            case DELETE -> userService.delete(user);
         }
+        log.info("End DB operations on entity USER");
+        kafkaProducer.sendMessage(userEvent,user);
     }
 
     private User getUser(KeycloakEvent keycloakEvent) throws JsonProcessingException {

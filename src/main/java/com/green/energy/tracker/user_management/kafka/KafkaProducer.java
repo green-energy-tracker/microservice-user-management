@@ -15,15 +15,11 @@ import org.springframework.stereotype.Service;
 public class KafkaProducer {
     @Value("${spring.kafka.topic.user-events}")
     private String topicUserEvents;
-    @Value("${spring.kafka.properties.schema.registry.url}")
-    private String schemaRegistryUrl;
-    @Value("${spring.kafka.properties.schema.registry.cache-capacity}")
-    private Integer schemaRegistryCacheCapacity;
     private final KafkaTemplate<String, UserEventPayload> kafkaTemplate;
 
     public void sendMessage(UserEvent userEvent, User user){
         UserEventPayload userEventPayload = generatePayload(userEvent,user);
-        kafkaTemplate.send(topicUserEvents,userEventPayload.getUser().getUsername(),userEventPayload);
+        kafkaTemplate.send(topicUserEvents,userEventPayload);
     }
 
     private UserEventPayload generatePayload(UserEvent userEvent, User user){

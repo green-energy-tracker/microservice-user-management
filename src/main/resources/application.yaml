@@ -23,7 +23,6 @@ spring:
           url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
     topic:
       user-events: ${SPRING_KAFKA_TOPIC_USER_EVENTS}
-      user-events-dlt: ${SPRING_KAFKA_TOPIC_USER_EVENTS_DLT}
       auth-server-events: ${SPRING_KAFKA_TOPIC_AUTH_SERVER_EVENTS}
     producer:
       key-serializer: ${SPRING_KAFKA_PRODUCER_KEY_SERIALIZER}
@@ -35,6 +34,8 @@ spring:
       key-deserializer: ${SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER}
       value-deserializer: ${SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER}
       properties:
+        spring.deserializer.key.delegate.class: ${SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_DESERIALIZER_KEY_DELEGATE_CLASS}
+        spring.deserializer.value.delegate.class: ${SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_DESERIALIZER_VALUE_DELEGATE_CLASS}
         spring.json.trusted.packages: ${SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_JSON_TRUSTED_PACKAGES}
         spring.json.value.default.type: ${SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_JSON_VALUE_DEFAULT_TYPE}
   management:
