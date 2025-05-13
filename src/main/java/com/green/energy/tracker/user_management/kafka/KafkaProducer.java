@@ -5,6 +5,7 @@ import com.green.energy.tracker.user_management.model.User;
 import com.green.energy.tracker.user_management.model.UserEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -15,24 +16,12 @@ import org.springframework.stereotype.Service;
 public class KafkaProducer {
     @Value("${spring.kafka.topic.user-events}")
     private String topicUserEvents;
+    private final ModelMapper modelMapper;
     private final KafkaTemplate<String, UserEventPayload> kafkaTemplate;
 
     public void sendMessage(UserEvent userEvent, User user){
-        UserEventPayload userEventPayload = generatePayload(userEvent,user);
+        UserEventPayload userEventPayload = modelMapper.map(user,UserEventPayload.class);
+        userEventPayload.setEventType(userEvent.name());
         kafkaTemplate.send(topicUserEvents,userEventPayload);
-    }
-
-    private UserEventPayload generatePayload(UserEvent userEvent, User user){
-        return UserEventPayload.newBuilder()
-                .setUser(com.green.energy.tracker.configuration.domain.event.User.newBuilder()
-                        .setId(user.getId())
-                        .setEmail(user.getEmail())
-                        .setEnabled(user.isEnabled())
-                        .setFirstName(user.getFirstName())
-                        .setLastName(user.getLastName())
-                        .setRealmId(user.getRealmId())
-                        .build())
-                .setEventType(com.green.energy.tracker.configuration.domain.event.UserEvent.valueOf(userEvent.name()))
-                .build();
     }
 }
