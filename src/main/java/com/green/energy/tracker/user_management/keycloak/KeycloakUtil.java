@@ -34,11 +34,11 @@ public class KeycloakUtil {
         String representation = keycloakEvent.getRepresentation().replaceAll("^\"|\"$", "");
         JsonNode repNode = new ObjectMapper().readTree(representation);
         return User.builder()
-                .email(repNode.path(KeycloakRepresentationKey.EMAIL.name()).asText())
-                .enabled(repNode.path(KeycloakRepresentationKey.ENABLED.name()).asBoolean())
-                .firstName(repNode.path(KeycloakRepresentationKey.FIRST_NAME.name()).asText())
-                .lastName(repNode.path(KeycloakRepresentationKey.LAST_NAME.name()).asText())
-                .username(repNode.path(KeycloakRepresentationKey.USERNAME.name()).asText())
+                .email(repNode.path(KeycloakRepresentationKey.EMAIL.getField()).asText())
+                .enabled(repNode.path(KeycloakRepresentationKey.ENABLED.getField()).asBoolean())
+                .firstName(repNode.path(KeycloakRepresentationKey.FIRSTNAME.getField()).asText())
+                .lastName(repNode.path(KeycloakRepresentationKey.LASTNAME.getField()).asText())
+                .username(repNode.path(KeycloakRepresentationKey.USERNAME.getField()).asText())
                 .realmId(keycloakEvent.getRealmId())
                 .build();
     }
