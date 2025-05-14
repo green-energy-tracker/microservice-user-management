@@ -23,12 +23,14 @@ spring:
           url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
     topic:
       user-events: ${SPRING_KAFKA_TOPIC_USER_EVENTS}
+      user-events-dlt: ${SPRING_KAFKA_TOPIC_USER_EVENTS_DLT}
       auth-server-events: ${SPRING_KAFKA_TOPIC_AUTH_SERVER_EVENTS}
-    producer:
-      key-serializer: ${SPRING_KAFKA_PRODUCER_KEY_SERIALIZER}
-      value-serializer: ${SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER}
-      properties:
-        schema.registry.url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
+    producer-avro:
+      key-serializer: ${SPRING_KAFKA_PRODUCER_AVRO_KEY_SERIALIZER}
+      value-serializer: ${SPRING_KAFKA_PRODUCER_AVRO_VALUE_SERIALIZER}
+    producer-dlt:
+      key-serializer: ${SPRING_KAFKA_PRODUCER_DLT_KEY_SERIALIZER}
+      value-serializer: ${SPRING_KAFKA_PRODUCER_DLT_VALUE_SERIALIZER}
     consumer:
       group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID}
       key-deserializer: ${SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER}

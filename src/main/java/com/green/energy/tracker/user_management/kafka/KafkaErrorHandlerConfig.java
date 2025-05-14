@@ -4,6 +4,7 @@ import com.green.energy.tracker.user_management.keycloak.KeycloakEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.TopicPartition;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -18,11 +19,14 @@ import org.springframework.util.backoff.FixedBackOff;
 @Slf4j
 public class KafkaErrorHandlerConfig {
 
+    @Value("${spring.kafka.topic.user-events-dlt}")
+    private String topicUserEventsDlt;
+
     @Bean
     public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<Object, Object> kafkaTemplate) {
         return new DeadLetterPublishingRecoverer(kafkaTemplate,
                 (ConsumerRecord<?, ?> record, Exception ex) ->
-                        new TopicPartition(record.topic() + ".DLT", record.partition())
+                        new TopicPartition(topicUserEventsDlt, record.partition())
         );
     }
 
