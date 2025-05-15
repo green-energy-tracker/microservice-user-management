@@ -25,7 +25,7 @@ public class KafkaProducer {
     @Qualifier("avroKafkaTemplate")
     private final KafkaTemplate<String, UserEventPayload> avroKafkaTemplate;
     @Qualifier("dltKafkaTemplate")
-    private final KafkaTemplate<String, String> dltKafkaTemplate;
+    private final KafkaTemplate<Object, Object> dltKafkaTemplate;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
 

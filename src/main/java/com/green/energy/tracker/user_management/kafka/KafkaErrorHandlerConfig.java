@@ -23,7 +23,7 @@ public class KafkaErrorHandlerConfig {
     private String topicUserEventsDlt;
 
     @Bean
-    public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<String, String> kafkaTemplate) {
+    public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<Object, Object> kafkaTemplate) {
         return new DeadLetterPublishingRecoverer(kafkaTemplate,
                 (ConsumerRecord<?, ?> record, Exception ex) ->
                         new TopicPartition(topicUserEventsDlt, record.partition())
