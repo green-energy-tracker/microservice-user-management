@@ -1,9 +1,10 @@
 package com.green.energy.tracker.user_management.kafka;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.green.energy.tracker.user_management.keycloak.KeycloakEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.util.backoff.FixedBackOff;
+import java.util.Objects;
 
 
 @Configuration
@@ -23,10 +25,19 @@ public class KafkaErrorHandlerConfig {
     private String topicUserEventsDlt;
 
     @Bean
-    public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<Object, Object> kafkaTemplate) {
-        return new DeadLetterPublishingRecoverer(kafkaTemplate,
-                (ConsumerRecord<?, ?> record, Exception ex) ->
-                        new TopicPartition(topicUserEventsDlt, record.partition())
+    public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<String, String> dltKafkaTemplate, ObjectMapper objectMapper) {
+        return new DeadLetterPublishingRecoverer(dltKafkaTemplate,
+                (ConsumerRecord<?, ?> record, Exception ex) -> {
+                    try {
+                        String key = Objects.nonNull(record.key()) ? record.key().toString() : "";
+                        String value = objectMapper.writeValueAsString(record.value());
+                        dltKafkaTemplate.send(topicUserEventsDlt, key, value);
+                        log.warn("Sent failed record to DLT topic [{}]: key={}, value={}", topicUserEventsDlt, key, value);
+                    } catch (JsonProcessingException e) {
+                        log.error("Failed to serialize record for DLT: {}", e.getMessage(), e);
+                    }
+                    return null;
+                }
         );
     }
 

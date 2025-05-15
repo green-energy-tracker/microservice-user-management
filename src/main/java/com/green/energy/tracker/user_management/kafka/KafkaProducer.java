@@ -22,29 +22,12 @@ import java.util.concurrent.ExecutionException;
 public class KafkaProducer {
     @Value("${spring.kafka.topic.user-events}")
     private String topicUserEvents;
-    @Value("${spring.kafka.topic.user-events-dlt}")
-    private String topicUserEventsDlt;
-    @Qualifier("avroKafkaTemplate")
     private final KafkaTemplate<String, UserEventPayload> avroKafkaTemplate;
-    @Qualifier("dltKafkaTemplate")
-    private final KafkaTemplate<Object, Object> dltKafkaTemplate;
     private final ModelMapper modelMapper;
-    private final ObjectMapper objectMapper;
 
     public void sendMessage(UserEvent userEvent, User user) throws ExecutionException, InterruptedException {
         UserEventPayload userEventPayload = modelMapper.map(user, UserEventPayload.class);
         userEventPayload.setEventType(userEvent.name());
         avroKafkaTemplate.send(topicUserEvents, String.valueOf(userEventPayload.getId()), userEventPayload).get();
-    }
-
-    private void handleSendFailure(String key, Object payload, Throwable ex) {
-        log.error("Error during serialization/sending to Kafka: {}", ex.getMessage());
-        try {
-            String fallbackPayload = objectMapper.writeValueAsString(payload);
-            dltKafkaTemplate.send(topicUserEventsDlt, key, fallbackPayload);
-            log.warn("Message sent to dlt topic: {}", topicUserEventsDlt);
-        } catch (JsonProcessingException e) {
-            log.error("Failed to send message on DLT topic : {}", e.getMessage());
-        }
     }
 }
