@@ -8,6 +8,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ExecutionException;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -16,7 +18,7 @@ public class kafkaConsumer {
     private final KeycloakEventProcessor keycloakEventProcessor;
 
     @KafkaListener(topics = "${spring.kafka.topic.auth-server-events}")
-    public void consumeEvent(ConsumerRecord<String,KeycloakEvent> keycloakEvent) throws JsonProcessingException {
+    public void consumeEvent(ConsumerRecord<String,KeycloakEvent> keycloakEvent) throws JsonProcessingException, ExecutionException, InterruptedException {
         log.info("Consuming Keycloak event: {}", keycloakEvent);
         keycloakEventProcessor.handleEvent(keycloakEvent);
     }

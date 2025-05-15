@@ -14,6 +14,8 @@ import org.springframework.kafka.KafkaException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ExecutionException;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -29,14 +31,10 @@ public class KafkaProducer {
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
 
-    public void sendMessage(UserEvent userEvent, User user){
+    public void sendMessage(UserEvent userEvent, User user) throws ExecutionException, InterruptedException {
         UserEventPayload userEventPayload = modelMapper.map(user, UserEventPayload.class);
-        try {
-            userEventPayload.setEventType(userEvent.name());
-            avroKafkaTemplate.send(topicUserEvents, String.valueOf(userEventPayload.getId()), userEventPayload);
-        } catch (KafkaException e){
-            handleSendFailure(String.valueOf(userEventPayload.getId()),userEventPayload,e);
-        }
+        userEventPayload.setEventType(userEvent.name());
+        avroKafkaTemplate.send(topicUserEvents, String.valueOf(userEventPayload.getId()), userEventPayload).get();
     }
 
     private void handleSendFailure(String key, Object payload, Throwable ex) {

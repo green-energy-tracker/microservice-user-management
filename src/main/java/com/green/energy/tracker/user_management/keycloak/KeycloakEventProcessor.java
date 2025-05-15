@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ExecutionException;
+
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class KeycloakEventProcessor {
     private final UserService userService;
     private final KafkaProducer kafkaProducer;
 
-    public void handleEvent(ConsumerRecord<String,KeycloakEvent> keycloakEventRecord) throws JsonProcessingException {
+    public void handleEvent(ConsumerRecord<String,KeycloakEvent> keycloakEventRecord) throws JsonProcessingException, ExecutionException, InterruptedException {
         var keycloakEvent = keycloakEventRecord.value();
         log.info("Mapping Keycloak event [{}] to User",keycloakEvent);
         var user = getUser(keycloakEvent);
