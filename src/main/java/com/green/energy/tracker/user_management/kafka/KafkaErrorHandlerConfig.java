@@ -23,7 +23,7 @@ public class KafkaErrorHandlerConfig {
     private String topicUserEventsDlt;
 
     @Bean
-    public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<Object, Object> kafkaTemplate) {
+    public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<String, String> kafkaTemplate) {
         return new DeadLetterPublishingRecoverer(kafkaTemplate,
                 (ConsumerRecord<?, ?> record, Exception ex) ->
                         new TopicPartition(topicUserEventsDlt, record.partition())
@@ -35,7 +35,6 @@ public class KafkaErrorHandlerConfig {
         FixedBackOff backOff = new FixedBackOff(1000L, 3L);
         return new DefaultErrorHandler(recoverer, backOff);
     }
-
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, KeycloakEvent> kafkaListenerContainerFactory (
