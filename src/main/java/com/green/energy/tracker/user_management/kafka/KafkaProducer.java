@@ -8,6 +8,7 @@ import com.green.energy.tracker.user_management.model.UserEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.KafkaException;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,10 +22,12 @@ public class KafkaProducer {
     private String topicUserEvents;
     @Value("${spring.kafka.topic.user-events-dlt}")
     private String topicUserEventsDlt;
+    @Qualifier("avroKafkaTemplate")
+    private final KafkaTemplate<String, UserEventPayload> avroKafkaTemplate;
+    @Qualifier("dltKafkaTemplate")
+    private final KafkaTemplate<String, String> dltKafkaTemplate;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
-    private final KafkaTemplate<String, UserEventPayload> avroKafkaTemplate;
-    private final KafkaTemplate<String, String> dltKafkaTemplate;
 
     public void sendMessage(UserEvent userEvent, User user){
         UserEventPayload userEventPayload = modelMapper.map(user, UserEventPayload.class);

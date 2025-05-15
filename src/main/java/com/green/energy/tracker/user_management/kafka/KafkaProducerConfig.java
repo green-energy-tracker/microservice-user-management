@@ -1,15 +1,12 @@
 package com.green.energy.tracker.user_management.kafka;
 
 import com.green.energy.tracker.configuration.domain.event.UserEventPayload;
-import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +25,6 @@ public class KafkaProducerConfig {
     private String producerDltValueSerializer;
 
 
-    // Producer standard (con Avro)
     @Bean
     public ProducerFactory<String, UserEventPayload> avroProducerFactory() {
         Map<String, Object> config = new HashMap<>();
