@@ -2,35 +2,50 @@ package com.green.energy.tracker.user_management.service;
 
 import com.green.energy.tracker.user_management.model.User;
 import com.green.energy.tracker.user_management.repository.UserRepository;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service("UserServiceV1")
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
     @Override
     public User save(User user) {
+        if(userRepository.findByUsername(user.getUsername()).isPresent())
+            throw new EntityExistsException("User already exists with username: " + user.getUsername());
         return userRepository.save(user);
     }
 
     @Override
     public User update(User user) {
-        return userRepository.save(user);
+        User persistenceUser = findByUsername(user.getUsername());
+        BeanUtils.copyProperties(user, persistenceUser, "id");
+        return userRepository.save(persistenceUser);
     }
 
     @Override
     public void delete(User user) {
-        userRepository.delete(user);
+        User persistenceUser = findByUsername(user.getUsername());
+        userRepository.delete(persistenceUser);
     }
 
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
     }
 
 }
