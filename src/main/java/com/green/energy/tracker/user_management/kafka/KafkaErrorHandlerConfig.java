@@ -28,7 +28,6 @@ public class KafkaErrorHandlerConfig {
     public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<String, DltRecord> dltKafkaTemplate, ObjectMapper objectMapper) {
         return new DeadLetterPublishingRecoverer(dltKafkaTemplate,
                 (ConsumerRecord<?, ?> record, Exception ex) -> {
-
                     try {
                         DltRecord dltRecord = DltRecord.builder()
                                 .key(Objects.nonNull(record.key()) ? record.key().toString() : "")
