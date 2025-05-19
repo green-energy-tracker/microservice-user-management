@@ -8,7 +8,11 @@ import com.green.energy.tracker.user_management.model.UserEvent;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class KeycloakUtil {
+public final class KeycloakUtil {
+
+    private KeycloakUtil() {
+        throw new AssertionError("Cannot instantiate utility class");
+    }
 
     public static Optional<User> getUser(KeycloakEvent keycloakEvent) throws JsonProcessingException {
         if(isEventPermitted(keycloakEvent))
