@@ -5,7 +5,6 @@ import lombok.*;
 
 @Data
 @NoArgsConstructor
-@SuppressWarnings("java:S1068")
 public class KeycloakEvent {
     @JsonProperty("id_event")
     private Long idEvent;
