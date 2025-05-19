@@ -24,14 +24,14 @@ public class KafkaErrorHandlerConfig {
 
     @Bean
     public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<String, DltRecord> dltKafkaTemplate) {
-        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(dltKafkaTemplate, (ConsumerRecord<?, ?> record, Exception ex) -> {
+        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(dltKafkaTemplate, (ConsumerRecord<?, ?> dltRecord, Exception ex) -> {
              DltRecord dlt = DltRecord.builder()
-                            .key(Objects.nonNull(record.key()) ? record.key().toString() : "")
-                            .payload(Objects.nonNull(record.value()) ? record.value().toString() : "")
+                            .key(Objects.nonNull(dltRecord.key()) ? dltRecord.key().toString() : "")
+                            .payload(Objects.nonNull(dltRecord.value()) ? dltRecord.value().toString() : "")
                             .error(ex.getMessage())
                             .causedBy(ex.getCause().getMessage())
                             .build();
-                    dltKafkaTemplate.send(topicUserEventsDlt, record.partition(),dlt.getKey(),dlt);
+                    dltKafkaTemplate.send(topicUserEventsDlt, dltRecord.partition(),dlt.getKey(),dlt);
             return null;
         });
         recoverer.setThrowIfNoDestinationReturned(false);

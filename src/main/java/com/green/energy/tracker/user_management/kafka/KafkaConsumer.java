@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class kafkaConsumer {
+public class KafkaConsumer {
 
     private final KeycloakEventProcessor keycloakEventProcessor;
 
