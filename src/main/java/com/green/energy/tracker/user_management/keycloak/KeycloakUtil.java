@@ -10,10 +10,6 @@ import java.util.Optional;
 
 public final class KeycloakUtil {
 
-    private KeycloakUtil() {
-        throw new AssertionError("Cannot instantiate utility class");
-    }
-
     public static Optional<User> getUser(KeycloakEvent keycloakEvent) throws JsonProcessingException {
         if(isEventPermitted(keycloakEvent))
             return Optional.of(getUserFromRepresentation(keycloakEvent));
