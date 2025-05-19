@@ -37,7 +37,9 @@ public class UserController {
         try {
             User user = userService.findByUsername(username);
             return ResponseEntity.ok(user);
-        } catch (EntityNotFoundException | IllegalArgumentException e) {
+        } catch(EntityNotFoundException e){
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
