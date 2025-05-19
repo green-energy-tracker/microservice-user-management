@@ -19,6 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
+        user.setUsername(user.getUsername().toUpperCase());
         if(userRepository.findByUsername(user.getUsername()).isPresent())
             throw new EntityExistsException("User already exists with username: " + user.getUsername());
         return userRepository.save(user);
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
+        user.setUsername(user.getUsername().toUpperCase());
         User persistenceUser = findByUsername(user.getUsername());
         BeanUtils.copyProperties(user, persistenceUser, "id");
         return userRepository.save(persistenceUser);
@@ -44,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username.toUpperCase())
+        return userRepository.findByUsername(username)
                 .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
     }
 
