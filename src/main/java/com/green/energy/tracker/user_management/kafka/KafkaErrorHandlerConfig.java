@@ -33,6 +33,7 @@ public class KafkaErrorHandlerConfig {
                             .key(Objects.nonNull(record.key()) ? record.key().toString() : "")
                             .payload(Objects.nonNull(record.value()) ? record.value().toString() : "")
                             .error(ex.getMessage())
+                            .causedBy(ex.getCause().getMessage())
                             .build();
                     dltKafkaTemplate.send(topicUserEventsDlt, record.partition(),dlt.getKey(),dlt);
                     return new TopicPartition(topicUserEventsDlt, record.partition());

@@ -13,4 +13,5 @@ public class DltRecord {
     private String key;
     private String payload;
     private String error;
+    private String causedBy;
 }
