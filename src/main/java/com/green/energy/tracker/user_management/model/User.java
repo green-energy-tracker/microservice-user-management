@@ -1,13 +1,17 @@
 package com.green.energy.tracker.user_management.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
