@@ -1,10 +1,10 @@
 package com.green.energy.tracker.user_management.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.green.energy.tracker.user_management.keycloak.KeycloakEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,21 +25,17 @@ public class KafkaErrorHandlerConfig {
     private String topicUserEventsDlt;
 
     @Bean
-    public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<String, DltRecord> dltKafkaTemplate, ObjectMapper objectMapper) {
-        return new DeadLetterPublishingRecoverer(dltKafkaTemplate,
-                (ConsumerRecord<?, ?> record, Exception ex) -> {
-                    try {
-                        DltRecord dltRecord = DltRecord.builder()
-                                .key(Objects.nonNull(record.key()) ? record.key().toString() : "")
-                                .payload(objectMapper.writeValueAsString(record.value()))
-                                .error(ex.getMessage())
-                                .build();
-                        dltKafkaTemplate.send(topicUserEventsDlt, dltRecord.getKey(), dltRecord);
-                        log.warn("Sent failed record to DLT topic [{}]: key={}, value={}", topicUserEventsDlt, dltRecord.getKey(), dltRecord.getPayload());
-                    } catch (JsonProcessingException e) {
-                        log.error("Failed to serialize record for DLT: {}", e.getMessage(), e);
-                    }
-                    return null;
+    public DeadLetterPublishingRecoverer deadLetterRecoverer(
+            KafkaTemplate<String, DltRecord> dltKafkaTemplate,
+            ObjectMapper objectMapper) {
+        return new DeadLetterPublishingRecoverer(dltKafkaTemplate, (ConsumerRecord<?, ?> record, Exception ex) -> {
+             DltRecord dlt = DltRecord.builder()
+                            .key(Objects.nonNull(record.key()) ? record.key().toString() : "")
+                            .payload(Objects.nonNull(record.value()) ? record.value().toString() : "")
+                            .error(ex.getMessage())
+                            .build();
+                    dltKafkaTemplate.send(topicUserEventsDlt, record.partition(),dlt.getKey(),dlt);
+                    return new TopicPartition(topicUserEventsDlt, record.partition());
                 }
         );
     }
