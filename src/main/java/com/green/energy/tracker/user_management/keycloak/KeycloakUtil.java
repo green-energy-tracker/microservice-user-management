@@ -1,12 +1,9 @@
 package com.green.energy.tracker.user_management.keycloak;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.green.energy.tracker.user_management.model.User;
-import com.green.energy.tracker.user_management.model.UserEvent;
-import java.util.Arrays;
-import java.util.Optional;
+import com.fasterxml.jackson.databind.*;
+import com.green.energy.tracker.user_management.model.*;
+import java.util.*;
 
 public final class KeycloakUtil {
 

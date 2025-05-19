@@ -1,19 +1,13 @@
 package com.green.energy.tracker.user_management.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.green.energy.tracker.configuration.domain.event.UserEventPayload;
-import com.green.energy.tracker.user_management.model.User;
-import com.green.energy.tracker.user_management.model.UserEvent;
+import com.green.energy.tracker.user_management.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.KafkaException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-
 import java.util.concurrent.ExecutionException;
 
 @Service

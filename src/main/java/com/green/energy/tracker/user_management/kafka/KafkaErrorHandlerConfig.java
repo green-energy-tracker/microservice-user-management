@@ -4,16 +4,12 @@ import com.green.energy.tracker.user_management.keycloak.KeycloakEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.ConsumerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
-import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.*;
 import org.springframework.util.backoff.FixedBackOff;
 import java.util.Objects;
-
 
 @Configuration
 @Slf4j
@@ -23,8 +19,8 @@ public class KafkaErrorHandlerConfig {
     private String topicUserEventsDlt;
 
     @Bean
-    public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<String, DltRecord> dltKafkaTemplate) {
-        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(dltKafkaTemplate, (ConsumerRecord<?, ?> dltRecord, Exception ex) -> {
+    public DeadLetterPublishingRecoverer deadLetterRecover(KafkaTemplate<String, DltRecord> dltKafkaTemplate) {
+        DeadLetterPublishingRecoverer recover = new DeadLetterPublishingRecoverer(dltKafkaTemplate, (ConsumerRecord<?, ?> dltRecord, Exception ex) -> {
              DltRecord dlt = DltRecord.builder()
                             .key(Objects.nonNull(dltRecord.key()) ? dltRecord.key().toString() : "")
                             .payload(Objects.nonNull(dltRecord.value()) ? dltRecord.value().toString() : "")
@@ -34,14 +30,14 @@ public class KafkaErrorHandlerConfig {
                     dltKafkaTemplate.send(topicUserEventsDlt, dltRecord.partition(),dlt.getKey(),dlt);
             return null;
         });
-        recoverer.setThrowIfNoDestinationReturned(false);
-        return recoverer;
+        recover.setThrowIfNoDestinationReturned(false);
+        return recover;
     }
 
     @Bean
-    public DefaultErrorHandler defaultErrorHandler(DeadLetterPublishingRecoverer recoverer) {
+    public DefaultErrorHandler defaultErrorHandler(DeadLetterPublishingRecoverer recover) {
         FixedBackOff backOff = new FixedBackOff(1000L, 3L);
-        return new DefaultErrorHandler(recoverer, backOff);
+        return new DefaultErrorHandler(recover, backOff);
     }
 
     @Bean

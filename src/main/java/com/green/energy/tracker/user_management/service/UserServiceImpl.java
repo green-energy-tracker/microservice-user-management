@@ -2,13 +2,11 @@ package com.green.energy.tracker.user_management.service;
 
 import com.green.energy.tracker.user_management.model.User;
 import com.green.energy.tracker.user_management.repository.UserRepository;
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service("UserServiceV1")
