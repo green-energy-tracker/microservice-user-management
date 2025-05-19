@@ -3,5 +3,5 @@
 ciPipeline(
     imageName: 'user-management',
     imageTag:  'latest',
-    groupId:    'com.green.energy.tracker'
+    groupId:   'com.green.energy.tracker'
 )
