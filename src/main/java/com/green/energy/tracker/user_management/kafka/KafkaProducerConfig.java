@@ -43,7 +43,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, String> dltProducerFactory() {
+    public ProducerFactory<String, DltRecord> dltProducerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, producerDltKeySerializer);
@@ -52,7 +52,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean(name = "dltKafkaTemplate")
-    public KafkaTemplate<String, String> dltKafkaTemplate() {
+    public KafkaTemplate<String, DltRecord> dltKafkaTemplate() {
         return new KafkaTemplate<>(dltProducerFactory());
     }
 }

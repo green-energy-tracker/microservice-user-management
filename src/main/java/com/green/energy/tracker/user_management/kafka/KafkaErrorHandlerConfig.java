@@ -25,14 +25,18 @@ public class KafkaErrorHandlerConfig {
     private String topicUserEventsDlt;
 
     @Bean
-    public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<String, String> dltKafkaTemplate, ObjectMapper objectMapper) {
+    public DeadLetterPublishingRecoverer deadLetterRecoverer(KafkaTemplate<String, DltRecord> dltKafkaTemplate, ObjectMapper objectMapper) {
         return new DeadLetterPublishingRecoverer(dltKafkaTemplate,
                 (ConsumerRecord<?, ?> record, Exception ex) -> {
+
                     try {
-                        String key = Objects.nonNull(record.key()) ? record.key().toString() : "";
-                        String value = objectMapper.writeValueAsString(record.value());
-                        dltKafkaTemplate.send(topicUserEventsDlt, key, value);
-                        log.warn("Sent failed record to DLT topic [{}]: key={}, value={}", topicUserEventsDlt, key, value);
+                        DltRecord dltRecord = DltRecord.builder()
+                                .key(Objects.nonNull(record.key()) ? record.key().toString() : "")
+                                .payload(objectMapper.writeValueAsString(record.value()))
+                                .error(ex.getMessage())
+                                .build();
+                        dltKafkaTemplate.send(topicUserEventsDlt, dltRecord.getKey(), dltRecord);
+                        log.warn("Sent failed record to DLT topic [{}]: key={}, value={}", topicUserEventsDlt, dltRecord.getKey(), dltRecord.getPayload());
                     } catch (JsonProcessingException e) {
                         log.error("Failed to serialize record for DLT: {}", e.getMessage(), e);
                     }
