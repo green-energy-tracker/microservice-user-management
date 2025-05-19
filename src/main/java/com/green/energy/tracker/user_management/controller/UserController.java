@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/user-management")
+@RequestMapping("/api/v1/user-management")
 public class UserController {
 
     private final UserService userService;
@@ -34,15 +34,6 @@ public class UserController {
     })
     @GetMapping("/findByUsername")
     public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
-        try {
-            User user = userService.findByUsername(username);
-            return ResponseEntity.ok(user);
-        } catch(EntityNotFoundException e){
-            return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(userService.findByUsername(username));
     }
 }
