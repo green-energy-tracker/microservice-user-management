@@ -34,8 +34,8 @@ public class KeycloakEventProcessor {
         log.info("Start DB operations on entity USER");
         switch (userEvent){
             case CREATE -> userService.save(user);
-            case UPDATE -> userService.update(user);
             case DELETE -> userService.delete(user);
+            default -> userService.update(user);
         }
         log.info("End DB operations on entity USER");
         kafkaProducer.sendMessage(userEvent,user);
