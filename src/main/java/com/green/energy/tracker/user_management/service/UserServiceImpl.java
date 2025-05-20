@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public User save(User user) {
+    public User create(User user) {
         user.setUsername(user.getUsername().toUpperCase());
         if(userRepository.findByUsername(user.getUsername()).isPresent())
             throw new EntityExistsException("User already exists with username: " + user.getUsername());

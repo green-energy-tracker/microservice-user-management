@@ -31,7 +31,7 @@ public class KeycloakEventProcessor {
 
         log.info("Start DB operations on entity USER");
         switch (userEvent){
-            case CREATE -> userService.save(user);
+            case CREATE -> userService.create(user);
             case DELETE -> userService.delete(user);
             default -> userService.update(user);
         }
