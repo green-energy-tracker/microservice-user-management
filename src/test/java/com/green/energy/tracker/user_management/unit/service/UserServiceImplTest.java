@@ -1,7 +1,8 @@
-package com.green.energy.tracker.user_management.service;
+package com.green.energy.tracker.user_management.unit.service;
 
 import com.green.energy.tracker.user_management.model.User;
 import com.green.energy.tracker.user_management.repository.UserRepository;
+import com.green.energy.tracker.user_management.service.UserServiceImpl;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenCreateThenRepositorySaveCalled() {
+    void testCreate() {
         when(userRepository.findByUsername("TEST")).thenReturn(Optional.empty());
         userService.create(mockUser);
         verify(userRepository).findByUsername("TEST");
@@ -38,7 +39,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenCreateThenThrowEntityExistsException() {
+    void testCreateEntityExistsException() {
         when(userRepository.findByUsername("TEST")).thenReturn(Optional.of(mockUser));
         assertThrows(EntityExistsException.class, () -> userService.create(mockUser));
         verify(userRepository).findByUsername("TEST");
@@ -46,7 +47,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenUpdateThenRepositorySaveCalled() {
+    void testUpdate() {
         when(userRepository.findByUsername("TEST")).thenReturn(Optional.of(mockUser));
         userService.update(mockUser);
         verify(userRepository).findByUsername("TEST");
@@ -54,7 +55,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenUpdateThenThrowEntityNotFoundException() {
+    void testUpdateEntityNotFoundException() {
         when(userRepository.findByUsername("TEST")).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> userService.update(mockUser));
         verify(userRepository).findByUsername("TEST");
@@ -62,7 +63,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenDeleteThenRepositoryDeleteCalled() {
+    void testDelete() {
         when(userRepository.findByUsername("TEST")).thenReturn(Optional.of(mockUser));
         userService.delete(mockUser);
         verify(userRepository).findByUsername("TEST");
@@ -70,7 +71,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenDeleteThenThrowEntityNotFoundException() {
+    void testDeleteEntityNotFoundException() {
         when(userRepository.findByUsername("TEST")).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> userService.delete(mockUser));
         verify(userRepository).findByUsername("TEST");
@@ -78,7 +79,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenFindByIdThenReturnUser() {
+    void testFindById() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
         User user = userService.findById(1L);
         assertNotNull(user);
@@ -86,14 +87,14 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenFindByIdThenThrowEntityNotFoundException() {
+    void testFindByIdEntityNotFoundException() {
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> userService.findById(2L));
         verify(userRepository).findById(2L);
     }
 
     @Test
-    void whenFindByUsernameThenReturnUser() {
+    void testFindByUsername() {
         when(userRepository.findByUsername("TEST")).thenReturn(Optional.of(mockUser));
         User user = userService.findByUsername("TEST");
         assertNotNull(user);
@@ -101,7 +102,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void whenFindByUsernameThenThrowEntityNotFoundException() {
+    void testFindByUsernameEntityNotFoundException() {
         when(userRepository.findByUsername("TEST")).thenReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> userService.findByUsername("TEST"));
         verify(userRepository).findByUsername("TEST");

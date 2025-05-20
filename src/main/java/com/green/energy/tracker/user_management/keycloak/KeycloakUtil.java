@@ -7,6 +7,10 @@ import java.util.*;
 
 public final class KeycloakUtil {
 
+    private KeycloakUtil(){
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Optional<User> getUser(KeycloakEvent keycloakEvent) throws JsonProcessingException {
         if(isEventPermitted(keycloakEvent))
             return Optional.of(getUserFromRepresentation(keycloakEvent));
