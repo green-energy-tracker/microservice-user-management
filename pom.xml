@@ -204,10 +204,11 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- Generate Jacoco report -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.8</version>
+				<version>${jacocoPluginVersion}</version>
 				<executions>
 					<execution>
 						<goals><goal>prepare-agent</goal></goals>
@@ -219,10 +220,11 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- Generate SonarQube Analysis -->
 			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
-				<version>3.9.1.2184</version>
+				<version>${sonarPluginVersion}</version>
 			</plugin>
 		</plugins>
 	</build>
