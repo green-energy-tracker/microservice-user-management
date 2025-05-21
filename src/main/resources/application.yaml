@@ -1,19 +1,4 @@
 spring:
-  security:
-    oauth2:
-      client:
-        registration:
-          keycloak:
-            client-id: microservice-user-swagger-client
-            scope:
-              - openid
-              - profile
-              - email
-            authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-        provider:
-          keycloak:
-            issuer-uri: http://green-energy-tracker.keycloak/realms/green-energy-realm
   application:
     name: ${SPRING_APPLICATION_NAME}
   datasource:
