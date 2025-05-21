@@ -15,11 +15,11 @@ import static org.mockito.Mockito.*;
 class KafkaConsumerTest {
 
     @Mock
-    ConsumerRecord<String, KeycloakEvent> keycloakEvent;
+    private ConsumerRecord<String, KeycloakEvent> keycloakEvent;
     @Mock
-    KeycloakEventProcessor keycloakEventProcessor;
+    private KeycloakEventProcessor keycloakEventProcessor;
     @InjectMocks
-    KafkaConsumer kafkaConsumer;
+    private KafkaConsumer kafkaConsumer;
 
     @Test
     void testConsumeEventWithoutException() throws Exception {

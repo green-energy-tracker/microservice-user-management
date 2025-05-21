@@ -25,9 +25,9 @@ class KafkaProducerTest {
     @Mock
     private User user;
     @Mock
-    UserEventPayload userEventPayload;
+    private UserEventPayload userEventPayload;
     @InjectMocks
-    KafkaProducer kafkaProducer;
+    private KafkaProducer kafkaProducer;
 
     @BeforeEach
     void setUp() {

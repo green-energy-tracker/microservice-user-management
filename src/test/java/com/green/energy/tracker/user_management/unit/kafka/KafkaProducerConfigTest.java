@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(MockitoExtension.class)
 class KafkaProducerConfigTest {
     @InjectMocks
-    KafkaProducerConfig kafkaProducerConfig;
+    private KafkaProducerConfig kafkaProducerConfig;
 
     @BeforeEach
     void setUp(){

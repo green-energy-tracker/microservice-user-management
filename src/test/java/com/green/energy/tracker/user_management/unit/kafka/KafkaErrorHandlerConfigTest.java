@@ -12,24 +12,24 @@ import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.*;
 import org.springframework.test.util.ReflectionTestUtils;
 import java.util.function.BiFunction;
-
 import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith(MockitoExtension.class)
 class KafkaErrorHandlerConfigTest {
     @Mock
-    BiFunction<ConsumerRecord<?,?>, Exception, TopicPartition> dltDestinationResolver;
+    private BiFunction<ConsumerRecord<?,?>, Exception, TopicPartition> dltDestinationResolver;
     @Mock
-    KafkaTemplate<String, DltRecord> dltKafkaTemplate;
+    private KafkaTemplate<String, DltRecord> dltKafkaTemplate;
     @Mock
-    DeadLetterPublishingRecoverer deadLetterPublishingRecoverer;
+    private DeadLetterPublishingRecoverer deadLetterPublishingRecoverer;
     @Mock
-    ConsumerFactory<String, KeycloakEvent> consumerFactory;
+    private ConsumerFactory<String, KeycloakEvent> consumerFactory;
     @Mock
-    DefaultErrorHandler defaultErrorHandler;
+    private DefaultErrorHandler defaultErrorHandler;
     @Mock
-    ConsumerRecord<String,KeycloakEvent> consumerRecord;
+    private ConsumerRecord<String,KeycloakEvent> consumerRecord;
     @InjectMocks
-    KafkaErrorHandlerConfig kafkaErrorHandlerConfig;
+    private KafkaErrorHandlerConfig kafkaErrorHandlerConfig;
 
     @BeforeEach
     void setUp() {
