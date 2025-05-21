@@ -27,7 +27,7 @@ class KafkaErrorHandlerConfigTest {
     @Mock
     DefaultErrorHandler defaultErrorHandler;
     @Mock
-    ConsumerRecord<String,String> consumerRecord;
+    ConsumerRecord<String,KeycloakEvent> consumerRecord;
     @InjectMocks
     KafkaErrorHandlerConfig kafkaErrorHandlerConfig;
 
@@ -59,7 +59,7 @@ class KafkaErrorHandlerConfigTest {
     void testDltDestinationResolver(){
         var dltDestinationResolver = kafkaErrorHandlerConfig.dltDestinationResolver(dltKafkaTemplate);
         assertNotNull(dltDestinationResolver);
-        var topicPartion = dltDestinationResolver.apply(consumerRecord,new RuntimeException(new Throwable()));
-        assertNull(topicPartion);
+        var topicPartition = dltDestinationResolver.apply(consumerRecord,new RuntimeException(new Throwable()));
+        assertNull(topicPartition);
     }
 }

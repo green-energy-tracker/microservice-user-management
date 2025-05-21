@@ -21,17 +21,23 @@ public class KafkaErrorHandlerConfig {
     private String topicUserEventsDlt;
 
     @Bean
-    public BiFunction<ConsumerRecord<?,?>, Exception, TopicPartition> dltDestinationResolver(KafkaTemplate<String, DltRecord> dltKafkaTemplate) {
-        return (rec, ex) -> {
-            DltRecord dlt = DltRecord.builder()
-                    .key(Objects.nonNull(rec.key()) ? rec.key().toString() : "")
-                    .payload(Objects.nonNull(rec.value()) ? rec.value().toString() : "")
-                    .error(ex.getMessage())
-                    .causedBy(ex.getCause().getMessage())
-                    .build();
-            dltKafkaTemplate.send(topicUserEventsDlt, rec.partition(), dlt.getKey(), dlt);
-            return null;
-        };
+    public BiFunction<ConsumerRecord<String,KeycloakEvent>, Exception, TopicPartition> dltDestinationResolver(KafkaTemplate<String, DltRecord> dltKafkaTemplate) {
+        return (rec, ex) -> sendDltRecord(dltKafkaTemplate,rec,ex);
+    }
+
+    private TopicPartition sendDltRecord(KafkaTemplate<String,DltRecord> dltKafkaTemplate, ConsumerRecord<String,KeycloakEvent> rec, Exception ex){
+        DltRecord dlt = buildDltRecord(rec,ex);
+        dltKafkaTemplate.send(topicUserEventsDlt, rec.partition(), dlt.getKey(), dlt);
+        return null;
+    }
+
+    private DltRecord buildDltRecord(ConsumerRecord<String,KeycloakEvent> rec, Exception ex){
+        return DltRecord.builder()
+                .key(Objects.nonNull(rec.key()) ? rec.key() : "")
+                .payload(Objects.nonNull(rec.value()) ? rec.value().toString() : "")
+                .error(ex.getMessage())
+                .causedBy(ex.getCause().getMessage())
+                .build();
     }
 
     @Bean
