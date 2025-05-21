@@ -13,7 +13,7 @@ spring:
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
         provider:
           keycloak:
-            issuer-uri: https://green-energy-tracker.keycloak/realms/green-energy-realm
+            issuer-uri: http://green-energy-tracker.keycloak/realms/green-energy-realm
   application:
     name: ${SPRING_APPLICATION_NAME}
   datasource:
