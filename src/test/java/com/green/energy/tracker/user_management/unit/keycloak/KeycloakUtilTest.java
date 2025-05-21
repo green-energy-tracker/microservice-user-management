@@ -1,10 +1,8 @@
 package com.green.energy.tracker.user_management.unit.keycloak;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.green.energy.tracker.user_management.keycloak.KeycloakEvent;
-import com.green.energy.tracker.user_management.keycloak.KeycloakUtil;
-import com.green.energy.tracker.user_management.model.User;
-import com.green.energy.tracker.user_management.model.UserEvent;
+import com.green.energy.tracker.user_management.keycloak.*;
+import com.green.energy.tracker.user_management.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -69,7 +67,7 @@ class KeycloakUtilTest {
     void testGetUserEventReturnCreateUserEvent() {
         when(keycloakEvent.getResourceType()).thenReturn(User.class.getSimpleName());
         when(keycloakEvent.getOperationType()).thenReturn(UserEvent.CREATE.name());
-        Optional<UserEvent> userEvent = KeycloakUtil.getUserEvent(keycloakEvent);
+        var userEvent = KeycloakUtil.getUserEvent(keycloakEvent);
         assertTrue(userEvent.isPresent());
         assertEquals(UserEvent.CREATE, userEvent.get());
     }
@@ -78,7 +76,7 @@ class KeycloakUtilTest {
     void testGetUserEventReturnUpdateUserEvent() {
         when(keycloakEvent.getResourceType()).thenReturn(User.class.getSimpleName());
         when(keycloakEvent.getOperationType()).thenReturn(UserEvent.UPDATE.name());
-        Optional<UserEvent> userEvent = KeycloakUtil.getUserEvent(keycloakEvent);
+        var userEvent = KeycloakUtil.getUserEvent(keycloakEvent);
         assertTrue(userEvent.isPresent());
         assertEquals(UserEvent.UPDATE, userEvent.get());
     }
@@ -87,7 +85,7 @@ class KeycloakUtilTest {
     void testGetUserEventReturnDeleteUserEvent() {
         when(keycloakEvent.getResourceType()).thenReturn(User.class.getSimpleName());
         when(keycloakEvent.getOperationType()).thenReturn(UserEvent.DELETE.name());
-        Optional<UserEvent> userEvent = KeycloakUtil.getUserEvent(keycloakEvent);
+        var userEvent = KeycloakUtil.getUserEvent(keycloakEvent);
         assertTrue(userEvent.isPresent());
         assertEquals(UserEvent.DELETE, userEvent.get());
     }
@@ -96,7 +94,7 @@ class KeycloakUtilTest {
     void testGetUserEventReturnEmpty() {
         when(keycloakEvent.getResourceType()).thenReturn(User.class.getSimpleName());
         when(keycloakEvent.getOperationType()).thenReturn("UNKNOWN");
-        Optional<UserEvent> userEvent = KeycloakUtil.getUserEvent(keycloakEvent);
+        var userEvent = KeycloakUtil.getUserEvent(keycloakEvent);
         assertTrue(userEvent.isEmpty());
     }
 
@@ -105,7 +103,7 @@ class KeycloakUtilTest {
         when(keycloakEvent.getResourceType()).thenReturn(User.class.getSimpleName());
         when(keycloakEvent.getOperationType()).thenReturn(UserEvent.CREATE.name());
         when(keycloakEvent.getRepresentation()).thenReturn(REPRESENTATION_TEST_OK);
-        Optional<User> result = KeycloakUtil.getUser(keycloakEvent);
+        var result = KeycloakUtil.getUser(keycloakEvent);
         assertTrue(result.isPresent());
     }
 
@@ -114,7 +112,7 @@ class KeycloakUtilTest {
         when(keycloakEvent.getResourceType()).thenReturn(User.class.getSimpleName());
         when(keycloakEvent.getOperationType()).thenReturn(UserEvent.UPDATE.name());
         when(keycloakEvent.getRepresentation()).thenReturn(REPRESENTATION_TEST_OK);
-        Optional<User> result = KeycloakUtil.getUser(keycloakEvent);
+        var result = KeycloakUtil.getUser(keycloakEvent);
         assertTrue(result.isPresent());
     }
 
@@ -123,7 +121,7 @@ class KeycloakUtilTest {
         when(keycloakEvent.getResourceType()).thenReturn(User.class.getSimpleName());
         when(keycloakEvent.getOperationType()).thenReturn(UserEvent.DELETE.name());
         when(keycloakEvent.getRepresentation()).thenReturn(REPRESENTATION_TEST_OK);
-        Optional<User> result = KeycloakUtil.getUser(keycloakEvent);
+        var result = KeycloakUtil.getUser(keycloakEvent);
         assertTrue(result.isPresent());
     }
 
@@ -131,7 +129,7 @@ class KeycloakUtilTest {
     void testGetUserWithEventNotPermittedReturnEmpty() throws Exception {
         when(keycloakEvent.getResourceType()).thenReturn(User.class.getSimpleName());
         when(keycloakEvent.getOperationType()).thenReturn("UNKNOWN");
-        Optional<User> result = KeycloakUtil.getUser(keycloakEvent);
+        var result = KeycloakUtil.getUser(keycloakEvent);
         assertTrue(result.isEmpty());
     }
 
@@ -145,9 +143,9 @@ class KeycloakUtilTest {
 
     @Test
     void constructorThrowExceptionWhenCalled() throws Exception {
-        Constructor<KeycloakUtil> constructor = KeycloakUtil.class.getDeclaredConstructor();
+        var constructor = KeycloakUtil.class.getDeclaredConstructor();
         constructor.setAccessible(true);
-        InvocationTargetException exception = assertThrows(InvocationTargetException.class, constructor::newInstance);
+        var exception = assertThrows(InvocationTargetException.class, constructor::newInstance);
         assertInstanceOf(IllegalStateException.class, exception.getCause());
     }
 

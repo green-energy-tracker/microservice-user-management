@@ -3,17 +3,13 @@ package com.green.energy.tracker.user_management.unit.service;
 import com.green.energy.tracker.user_management.model.User;
 import com.green.energy.tracker.user_management.repository.UserRepository;
 import com.green.energy.tracker.user_management.service.UserServiceImpl;
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import jakarta.persistence.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,7 +18,6 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
     @Mock
     private UserRepository userRepository;
-
     private User mockUser;
 
     @BeforeEach

@@ -3,6 +3,7 @@ package com.green.energy.tracker.user_management.kafka;
 import com.green.energy.tracker.user_management.keycloak.KeycloakEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -10,6 +11,7 @@ import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.*;
 import org.springframework.util.backoff.FixedBackOff;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 @Configuration
 @Slf4j
@@ -19,17 +21,23 @@ public class KafkaErrorHandlerConfig {
     private String topicUserEventsDlt;
 
     @Bean
-    public DeadLetterPublishingRecoverer deadLetterRecover(KafkaTemplate<String, DltRecord> dltKafkaTemplate) {
-        DeadLetterPublishingRecoverer recover = new DeadLetterPublishingRecoverer(dltKafkaTemplate, (ConsumerRecord<?, ?> dltRecord, Exception ex) -> {
-             DltRecord dlt = DltRecord.builder()
-                            .key(Objects.nonNull(dltRecord.key()) ? dltRecord.key().toString() : "")
-                            .payload(Objects.nonNull(dltRecord.value()) ? dltRecord.value().toString() : "")
-                            .error(ex.getMessage())
-                            .causedBy(ex.getCause().getMessage())
-                            .build();
-                    dltKafkaTemplate.send(topicUserEventsDlt, dltRecord.partition(),dlt.getKey(),dlt);
+    public BiFunction<ConsumerRecord<?,?>, Exception, TopicPartition> dltDestinationResolver(KafkaTemplate<String, DltRecord> dltKafkaTemplate) {
+        return (rec, ex) -> {
+            DltRecord dlt = DltRecord.builder()
+                    .key(Objects.nonNull(rec.key()) ? rec.key().toString() : "")
+                    .payload(Objects.nonNull(rec.value()) ? rec.value().toString() : "")
+                    .error(ex.getMessage())
+                    .causedBy(ex.getCause().getMessage())
+                    .build();
+            dltKafkaTemplate.send(topicUserEventsDlt, rec.partition(), dlt.getKey(), dlt);
             return null;
-        });
+        };
+    }
+
+    @Bean
+    public DeadLetterPublishingRecoverer deadLetterRecover(KafkaTemplate<String, DltRecord> dltKafkaTemplate,
+                                                           BiFunction<ConsumerRecord<?,?>, Exception, TopicPartition> dltDestinationResolver) {
+        DeadLetterPublishingRecoverer recover = new DeadLetterPublishingRecoverer(dltKafkaTemplate, dltDestinationResolver);
         recover.setThrowIfNoDestinationReturned(false);
         return recover;
     }

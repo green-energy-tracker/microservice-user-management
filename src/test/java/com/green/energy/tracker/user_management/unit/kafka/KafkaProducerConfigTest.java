@@ -10,7 +10,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
-public class KafkaProducerConfigTest {
+class KafkaProducerConfigTest {
     @InjectMocks
     KafkaProducerConfig kafkaProducerConfig;
 

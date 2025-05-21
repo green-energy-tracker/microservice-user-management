@@ -2,22 +2,16 @@ package com.green.energy.tracker.user_management.unit.keycloak;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.green.energy.tracker.user_management.kafka.KafkaProducer;
-import com.green.energy.tracker.user_management.keycloak.KeycloakEvent;
-import com.green.energy.tracker.user_management.keycloak.KeycloakEventProcessor;
-import com.green.energy.tracker.user_management.keycloak.KeycloakUtil;
-import com.green.energy.tracker.user_management.model.User;
-import com.green.energy.tracker.user_management.model.UserEvent;
+import com.green.energy.tracker.user_management.keycloak.*;
+import com.green.energy.tracker.user_management.model.*;
 import com.green.energy.tracker.user_management.service.UserService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -38,7 +32,7 @@ class KeycloakEventProcessorTest {
 
     @Test
     void handleEventCreateUserAndSendMessageWhenUserEventIsCreate() throws Exception {
-        try (MockedStatic<KeycloakUtil> mockedStatic = mockStatic(KeycloakUtil.class)) {
+        try (var mockedStatic = mockStatic(KeycloakUtil.class)) {
             when(consumerRecord.value()).thenReturn(keycloakEvent);
             mockedStatic.when(() -> KeycloakUtil.getUser(keycloakEvent)).thenReturn(Optional.of(user));
             mockedStatic.when(() -> KeycloakUtil.getUserEvent(keycloakEvent)).thenReturn(Optional.of(UserEvent.CREATE));
@@ -50,7 +44,7 @@ class KeycloakEventProcessorTest {
 
     @Test
     void handleEventCreateUserAndSendMessageWhenUserEventIsDelete() throws Exception {
-        try (MockedStatic<KeycloakUtil> mockedStatic = mockStatic(KeycloakUtil.class)) {
+        try (var mockedStatic = mockStatic(KeycloakUtil.class)) {
             when(consumerRecord.value()).thenReturn(keycloakEvent);
             mockedStatic.when(() -> KeycloakUtil.getUser(keycloakEvent)).thenReturn(Optional.of(user));
             mockedStatic.when(() -> KeycloakUtil.getUserEvent(keycloakEvent)).thenReturn(Optional.of(UserEvent.DELETE));
@@ -62,7 +56,7 @@ class KeycloakEventProcessorTest {
 
     @Test
     void handleEventCreateUserAndSendMessageWhenUserEventIsOther() throws Exception {
-        try (MockedStatic<KeycloakUtil> mockedStatic = mockStatic(KeycloakUtil.class)) {
+        try (var mockedStatic = mockStatic(KeycloakUtil.class)) {
             when(consumerRecord.value()).thenReturn(keycloakEvent);
             mockedStatic.when(() -> KeycloakUtil.getUser(keycloakEvent)).thenReturn(Optional.of(user));
             mockedStatic.when(() -> KeycloakUtil.getUserEvent(keycloakEvent)).thenReturn(Optional.of(UserEvent.UPDATE));
@@ -74,7 +68,7 @@ class KeycloakEventProcessorTest {
 
     @Test
     void handleEventThrowExceptionWhenUserIsNotFound() {
-        try (MockedStatic<KeycloakUtil> mockedStatic = mockStatic(KeycloakUtil.class)) {
+        try (var mockedStatic = mockStatic(KeycloakUtil.class)) {
             when(consumerRecord.value()).thenReturn(keycloakEvent);
             mockedStatic.when(() -> KeycloakUtil.getUser(keycloakEvent)).thenReturn(Optional.empty());
             assertThrows(JsonParseException.class, () -> {keycloakEventProcessor.handleEvent(consumerRecord);});
