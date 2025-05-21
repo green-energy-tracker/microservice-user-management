@@ -26,7 +26,7 @@ public class KafkaErrorHandlerConfig {
     }
 
     private TopicPartition sendDltRecord(KafkaTemplate<String,DltRecord> dltKafkaTemplate, ConsumerRecord<String,KeycloakEvent> rec, Exception ex){
-        DltRecord dlt = buildDltRecord(rec,ex);
+        var dlt = buildDltRecord(rec,ex);
         dltKafkaTemplate.send(topicUserEventsDlt, rec.partition(), dlt.getKey(), dlt);
         return null;
     }
@@ -43,14 +43,14 @@ public class KafkaErrorHandlerConfig {
     @Bean
     public DeadLetterPublishingRecoverer deadLetterRecover(KafkaTemplate<String, DltRecord> dltKafkaTemplate,
                                                            BiFunction<ConsumerRecord<?,?>, Exception, TopicPartition> dltDestinationResolver) {
-        DeadLetterPublishingRecoverer recover = new DeadLetterPublishingRecoverer(dltKafkaTemplate, dltDestinationResolver);
+        var recover = new DeadLetterPublishingRecoverer(dltKafkaTemplate, dltDestinationResolver);
         recover.setThrowIfNoDestinationReturned(false);
         return recover;
     }
 
     @Bean
     public DefaultErrorHandler defaultErrorHandler(DeadLetterPublishingRecoverer recover) {
-        FixedBackOff backOff = new FixedBackOff(1000L, 3L);
+        var backOff = new FixedBackOff(1000L, 3L);
         return new DefaultErrorHandler(recover, backOff);
     }
 

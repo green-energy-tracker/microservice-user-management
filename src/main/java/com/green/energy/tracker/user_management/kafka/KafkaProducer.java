@@ -20,7 +20,7 @@ public class KafkaProducer {
     private final ModelMapper modelMapper;
 
     public void sendMessage(UserEvent userEvent, User user) throws ExecutionException, InterruptedException {
-        UserEventPayload userEventPayload = modelMapper.map(user, UserEventPayload.class);
+        var userEventPayload = modelMapper.map(user, UserEventPayload.class);
         userEventPayload.setEventType(userEvent.name());
         avroKafkaTemplate.send(topicUserEvents, String.valueOf(userEventPayload.getId()), userEventPayload).get();
     }

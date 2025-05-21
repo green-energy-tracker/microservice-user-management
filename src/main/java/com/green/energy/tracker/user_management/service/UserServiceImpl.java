@@ -26,14 +26,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         user.setUsername(user.getUsername().toUpperCase());
-        User persistenceUser = findByUsername(user.getUsername());
+        var persistenceUser = findByUsername(user.getUsername());
         BeanUtils.copyProperties(user, persistenceUser, "id");
         return userRepository.save(persistenceUser);
     }
 
     @Override
     public void delete(User user) {
-        User persistenceUser = findByUsername(user.getUsername());
+        var persistenceUser = findByUsername(user.getUsername());
         userRepository.delete(persistenceUser);
     }
 
