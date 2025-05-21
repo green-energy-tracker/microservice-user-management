@@ -13,6 +13,9 @@ import org.springframework.kafka.listener.*;
 import org.springframework.test.util.ReflectionTestUtils;
 import java.util.function.BiFunction;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class KafkaErrorHandlerConfigTest {
@@ -28,6 +31,10 @@ class KafkaErrorHandlerConfigTest {
     private DefaultErrorHandler defaultErrorHandler;
     @Mock
     private ConsumerRecord<String,KeycloakEvent> consumerRecord;
+    @Captor
+    private ArgumentCaptor<DltRecord> dltRecord;
+    @Mock
+    private KeycloakEvent keycloakEvent;
     @InjectMocks
     private KafkaErrorHandlerConfig kafkaErrorHandlerConfig;
 
@@ -57,9 +64,15 @@ class KafkaErrorHandlerConfigTest {
 
     @Test
     void testDltDestinationResolver(){
+        when(keycloakEvent.toString()).thenReturn("EVENT_AS_STRING");
+        ConsumerRecord<String, KeycloakEvent> consumerRecord = new ConsumerRecord<>("test-topic-dlt", 1, 123L, "test", keycloakEvent);
         var dltDestinationResolver = kafkaErrorHandlerConfig.dltDestinationResolver(dltKafkaTemplate);
         assertNotNull(dltDestinationResolver);
         var topicPartition = dltDestinationResolver.apply(consumerRecord,new RuntimeException(new Throwable()));
         assertNull(topicPartition);
+        verify(dltKafkaTemplate).send(eq("test-topic-dlt"), eq(1), eq("test"), dltRecord.capture());
+        DltRecord sent = dltRecord.getValue();
+        assertEquals("test", sent.getKey());
+        assertEquals("EVENT_AS_STRING", sent.getPayload());
     }
 }

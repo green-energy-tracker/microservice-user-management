@@ -2,11 +2,14 @@ package com.green.energy.tracker.user_management.unit;
 
 import com.green.energy.tracker.user_management.UserManagementApplication;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.SpringApplication;
 
-public class UserManagementApplicationTest {
+@ExtendWith(MockitoExtension.class)
+class UserManagementApplicationTest {
     @Test
     void testMain() {
         String[] args = new String[] { "test"};
