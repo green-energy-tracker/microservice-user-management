@@ -13,11 +13,7 @@ spring:
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
         provider:
           keycloak:
-            authorization-uri: http://green-energy-tracker.keycloak/realms/green-energy-realm/protocol/openid-connect/auth
-            token-uri: http://green-energy-tracker.keycloak/realms/green-energy-realm/protocol/openid-connect/token
-            user-info-uri: http://green-energy-tracker.keycloak/realms/green-energy-realm/protocol/openid-connect/userinfo
-            jwk-set-uri: http://green-energy-tracker.keycloak/realms/green-energy-realm/protocol/openid-connect/certs
-            user-name-attribute: preferred_username
+            issuer-uri: https://green-energy-tracker.keycloak/realms/green-energy-realm
   application:
     name: ${SPRING_APPLICATION_NAME}
   datasource:
