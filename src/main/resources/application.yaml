@@ -45,12 +45,5 @@ management:
     web:
       exposure:
         include: ${SPRING_MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE}
-  endpoint:
-    prometheus:
-      enabled: true
-  metrics:
-    export:
-      prometheus:
-        enabled: true
 server:
   port: ${SPRING_SERVER_PORT}
