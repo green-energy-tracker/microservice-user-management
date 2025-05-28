@@ -2,13 +2,11 @@
     <springProperty name="graylogHost" source="graylog.host"/>
     <springProperty name="graylogPort" source="graylog.port"/>
 
-    <!-- Appender per Graylog -->
     <appender name="GELF" class="de.siegmar.logbackgelf.GelfUdpAppender">
         <graylogHost>${graylogHost}</graylogHost>
         <graylogPort>${graylogPort}</graylogPort>
     </appender>
 
-    <!-- Appender per la console -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
