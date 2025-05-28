@@ -122,17 +122,11 @@
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
 		</dependency>
-		<!-- Json Logback -->
+		<!-- Logback Gelf -->
 		<dependency>
-			<groupId>ch.qos.logback.contrib</groupId>
-			<artifactId>logback-json-classic</artifactId>
-			<version>${logback-json-classic.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback.contrib</groupId>
-			<artifactId>logback-jackson</artifactId>
-			<version>${logback-jackson.version}</version>
+			<groupId>de.siegmar</groupId>
+			<artifactId>logback-gelf</artifactId>
+			<version>${logbackGelfVersion}</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

@@ -45,5 +45,8 @@ management:
     web:
       exposure:
         include: ${SPRING_MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE}
+graylog:
+  host: ${GRAYLOG_HOST}
+  port: ${GRAYLOG_PORT}
 server:
   port: ${SPRING_SERVER_PORT}
