@@ -49,4 +49,10 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username));
     }
 
+    @Override
+    public Long findIdByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with username: " + username)).getId();
+    }
+
 }

@@ -41,4 +41,17 @@ public class UserController {
     public ResponseEntity<User> getUserById(@RequestParam Long id) {
         return ResponseEntity.ok(userService.findById(id));
     }
+
+    @Operation(summary = "Get Id by Username")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User found"),
+            @ApiResponse(responseCode = "400", description = "Invalid id parameter", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Access denied", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
+    })
+    @GetMapping("/findIdByUsername")
+    public ResponseEntity<Long> getUserById(@RequestParam String username) {
+        return ResponseEntity.ok(userService.findIdByUsername(username));
+    }
 }
