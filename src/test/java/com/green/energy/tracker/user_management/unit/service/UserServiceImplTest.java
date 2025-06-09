@@ -103,4 +103,19 @@ class UserServiceImplTest {
         verify(userRepository).findByUsername("TEST");
     }
 
+    @Test
+    void testFindIdByUsername() {
+        when(userRepository.findByUsername("TEST")).thenReturn(Optional.of(mockUser));
+        Long id = userService.findIdByUsername("TEST");
+        assertEquals(1L,id);
+        verify(userRepository).findByUsername("TEST");
+    }
+
+    @Test
+    void testFindIdByUsernameEntityNotFoundException() {
+        when(userRepository.findByUsername("TEST")).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> userService.findIdByUsername("TEST"));
+        verify(userRepository).findByUsername("TEST");
+    }
+
 }

@@ -31,5 +31,9 @@ class UserControllerTest {
         when(userService.findById(1L)).thenReturn(mockUser);
         assertEquals(userController.getUserById(1L), ResponseEntity.ok(mockUser));
     }
-
+    @Test
+    void testGetIdByUsernameResponseOk(){
+        when(userService.findIdByUsername("test")).thenReturn(1L);
+        assertEquals(userController.getIdByUsername("test"), ResponseEntity.ok(1L));
+    }
 }

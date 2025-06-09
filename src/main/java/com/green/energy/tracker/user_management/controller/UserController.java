@@ -51,7 +51,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
     @GetMapping("/findIdByUsername")
-    public ResponseEntity<Long> getUserById(@RequestParam String username) {
+    public ResponseEntity<Long> getIdByUsername(@RequestParam String username) {
         return ResponseEntity.ok(userService.findIdByUsername(username));
     }
 }
